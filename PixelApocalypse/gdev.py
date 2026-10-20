@@ -5,4 +5,8 @@ def init(gfps, gname):
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((1920, 1000))
     pygame.display.set_caption(str(gname))
-    pgmod = pygame
+
+class asset:
+    class img:
+        def load(img, type):
+            return pygame.image.load(str(img) + "." + type)
