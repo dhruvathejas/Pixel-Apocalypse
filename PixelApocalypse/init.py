@@ -2,7 +2,9 @@ import gdev
 import menu
 
 gdev.init(60, "PixelApocalypse")
-pygame = gdev.pgmod
+pygame = gdev.pygame
+
+map = gdev.asset.img.load("PixelApocalypse")
 
 running = True
 while running:
