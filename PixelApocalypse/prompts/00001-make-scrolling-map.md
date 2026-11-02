@@ -1,0 +1,2 @@
+Now I have a map that does not scroll.
+If game_start is true, then the map should scroll to the right as the player moves. The player can move left and right, and the map should follow the player's movement. The background should be a pixel-art representation of an underground world, with various obstacles and enemies that the player must overcome. The bosses will spawn hacking minions that the player must defeat in order to progress through the game. (NOTE:Hacking MINIONS' assets will be provided later)
