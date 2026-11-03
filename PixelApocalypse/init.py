@@ -1,24 +1,11 @@
-import gdev
-import menu
+"""Pixel Apocalypse entry point: python3 init.py (from any folder)."""
+import sys
 
-gdev.init(60, "PixelApocalypse")
-pygame = gdev.pgmod
+import gdev  # noqa: F401  (puts the code folder, and the vendored pygame, on sys.path)
+import game
 
-running = True
-while running:
-    for events in pygame.event.get():
-        if events.type == pygame.QUIT:
-                running = False
-                exit()
-        
-        elif pygame.KEYDOWN:
-            if events.type == pygame.KEYDOWN:
-                 if events.key == pygame.K_ESCAPE:
-                    running = False
-                    exit()
-
-    if menu.game_start == True:
-         gdev.screen.blit(map, (0, 0))
-    
-    gdev.clock.tick(gdev.fps)
-    pygame.display.flip()
+if __name__ == "__main__":
+    g = game.Game()
+    g.main_loop()
+    gdev.pygame.quit()
+    sys.exit(0)

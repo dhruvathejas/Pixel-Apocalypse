@@ -1,0 +1,222 @@
+{
+  "source": "bg/map.png",
+  "size": [10000, 10000],
+  "art_bounds": [0, 0, 8192, 8192],
+  "floor_color": [2, 33, 1],
+  "walls": [
+    {
+      "rect": [0, 0, 8192, 205],
+      "color": [26, 99, 65]
+    },
+    {
+      "rect": [0, 205, 128, 7987],
+      "color": [26, 99, 65]
+    }
+  ],
+  "racks": [
+    {
+      "id": "A",
+      "shell": [1090, 858, 1919, 1010],
+      "color": [26, 99, 65],
+      "bars": [
+        {
+          "id": "A1",
+          "rect": [1346, 1114, 176, 498],
+          "color": [64, 152, 94],
+          "spawn_exit": [1434, 1892],
+          "exit_side": "bottom",
+          "hittable": false
+        },
+        {
+          "id": "A2",
+          "rect": [1689, 1114, 316, 498],
+          "color": [64, 152, 94],
+          "spawn_exit": [1847, 1892],
+          "exit_side": "bottom",
+          "hittable": false
+        },
+        {
+          "id": "A3",
+          "rect": [2172, 1114, 297, 498],
+          "color": [64, 152, 94],
+          "spawn_exit": [2320, 1892],
+          "exit_side": "bottom",
+          "hittable": false
+        },
+        {
+          "id": "A4",
+          "rect": [2636, 1114, 117, 498],
+          "color": [64, 152, 94],
+          "spawn_exit": [2694, 1892],
+          "exit_side": "bottom",
+          "hittable": false
+        }
+      ],
+      "zone_center": [2049, 1363],
+      "zone_radius": 1200,
+      "cut_by_void": false
+    },
+    {
+      "id": "B",
+      "shell": [5403, 742, 1610, 1300],
+      "color": [26, 99, 65],
+      "bars": [
+        {
+          "id": "B1",
+          "rect": [5659, 998, 214, 788],
+          "color": [64, 152, 94],
+          "spawn_exit": [5766, 2066],
+          "exit_side": "bottom",
+          "hittable": false
+        },
+        {
+          "id": "B2",
+          "rect": [6040, 998, 298, 788],
+          "color": [64, 152, 94],
+          "spawn_exit": [6189, 2066],
+          "exit_side": "bottom",
+          "hittable": false
+        },
+        {
+          "id": "B3",
+          "rect": [6505, 998, 252, 788],
+          "color": [64, 152, 94],
+          "spawn_exit": [6631, 2066],
+          "exit_side": "bottom",
+          "hittable": false
+        }
+      ],
+      "zone_center": [6208, 1392],
+      "zone_radius": 1200,
+      "cut_by_void": false
+    },
+    {
+      "id": "C",
+      "shell": [2328, 4552, 1474, 1919],
+      "color": [26, 99, 65],
+      "bars": [
+        {
+          "id": "C1",
+          "rect": [2584, 4808, 156, 1407],
+          "color": [64, 152, 94],
+          "spawn_exit": [2662, 6495],
+          "exit_side": "bottom",
+          "hittable": false
+        },
+        {
+          "id": "C2",
+          "rect": [2907, 4808, 317, 1407],
+          "color": [64, 152, 94],
+          "spawn_exit": [3065, 6495],
+          "exit_side": "bottom",
+          "hittable": false
+        },
+        {
+          "id": "C3",
+          "rect": [3391, 4808, 155, 1407],
+          "color": [64, 152, 94],
+          "spawn_exit": [3468, 6495],
+          "exit_side": "bottom",
+          "hittable": false
+        }
+      ],
+      "zone_center": [3065, 5511],
+      "zone_radius": 1200,
+      "cut_by_void": false
+    },
+    {
+      "id": "D",
+      "shell": [6119, 6467, 1435, 1725],
+      "color": [26, 99, 65],
+      "bars": [
+        {
+          "id": "D1",
+          "rect": [6375, 6723, 233, 1214],
+          "color": [64, 152, 94],
+          "spawn_exit": [6095, 7330],
+          "exit_side": "left",
+          "hittable": false
+        },
+        {
+          "id": "D2",
+          "rect": [6775, 6723, 356, 1214],
+          "color": [64, 152, 94],
+          "spawn_exit": [6953, 6443],
+          "exit_side": "top",
+          "hittable": false
+        }
+      ],
+      "zone_center": [6836, 7329],
+      "zone_radius": 1200,
+      "cut_by_void": true
+    },
+    {
+      "id": "E",
+      "shell": [471, 7260, 1262, 932],
+      "color": [26, 99, 65],
+      "bars": [
+        {
+          "id": "E1",
+          "rect": [727, 7516, 137, 676],
+          "color": [64, 152, 94],
+          "spawn_exit": [447, 7854],
+          "exit_side": "left",
+          "hittable": false
+        },
+        {
+          "id": "E2",
+          "rect": [1031, 7516, 162, 676],
+          "color": [64, 152, 94],
+          "spawn_exit": [1112, 7236],
+          "exit_side": "top",
+          "hittable": false
+        },
+        {
+          "id": "E3",
+          "rect": [1360, 7516, 117, 676],
+          "color": [64, 152, 94],
+          "spawn_exit": [1757, 7854],
+          "exit_side": "right",
+          "hittable": false
+        }
+      ],
+      "zone_center": [1102, 7726],
+      "zone_radius": 1200,
+      "cut_by_void": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "N1",
+      "role": "clean_node",
+      "rect": [1090, 2985, 546, 585],
+      "color": [26, 99, 65],
+      "note": "Clean Node 1: start, save, shop, terminal"
+    },
+    {
+      "id": "N2",
+      "role": "clean_node",
+      "rect": [4977, 3353, 585, 449],
+      "color": [26, 99, 65],
+      "note": "Clean Node 2: mid-game hub"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "deep_core_hatch",
+      "rect": [3662, 8149, 1301, 43],
+      "color": [26, 99, 65],
+      "note": "Deep Core hatch: entrance to the finale arena (partial block on bottom edge)"
+    },
+    {
+      "id": "spool_cache",
+      "rect": [8169, 4977, 23, 1011],
+      "color": [26, 99, 65],
+      "note": "Spool's cache: sealed Act II Key terminal (partial block on right edge)"
+    }
+  ],
+  "player_start": [1363, 2905],
+  "notes": [
+    "transparent strip [6751, 998, 6, 788] beside bar [6505, 998, 246, 788] folded into the bar"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "_doc": "Decoy data for the button hack (doc 5.5). misreads: glyph cluster -> [[what a decoy writes for it, weight], ...]; a reading longer than one letter (IC, IZ, IVI) is a length-changing misread and is only used where the Breach Level allows length tells. lookalikes: plain letter groups used for extra decoys and to force in a real word. real_words: dictionary for the real-word decoy rule (Breach Level 2+). blocklist: a decoy equal to, or containing, any of these is dropped.",
+  "misreads": {
+    "3":    [["B", 1.0]],
+    "0":    [["D", 1.0], ["Q", 0.6]],
+    "1":    [["L", 1.0], ["T", 0.8]],
+    "4":    [["H", 0.8], ["Y", 0.5]],
+    "5":    [["Z", 1.0]],
+    "7":    [["Y", 0.8], ["L", 0.8]],
+    "@":    [["O", 1.0]],
+    "$":    [["Z", 0.8]],
+    "|":    [["L", 1.0], ["T", 0.6]],
+    "|-|":  [["N", 1.0]],
+    "/-\\": [["N", 1.0], ["V", 0.6]],
+    "|<":   [["IC", 1.0], ["X", 0.7]],
+    "|_":   [["U", 1.0]],
+    "|2":   [["IZ", 1.0], ["B", 0.6]],
+    "|>":   [["D", 1.0], ["B", 0.5]],
+    "()":   [["C", 0.8], ["D", 0.8]],
+    "\\/":  [["U", 1.0], ["Y", 0.6]],
+    "|\\/|": [["N", 1.0], ["W", 0.8], ["IVI", 0.5]],
+    "|=":   [["E", 1.0], ["T", 0.6]],
+    "|_|":  [["L", 1.0], ["V", 0.7]],
+    "(":    [["G", 1.0], ["O", 0.6]]
+  },
+  "lookalikes": [["O", "Q", "D"], ["E", "F"], ["I", "L", "T"], ["U", "V"], ["M", "N"]],
+  "real_words": [
+    "BACKS", "BAIL", "BAND", "BANK", "BARK", "BARN", "BASE", "BAT", "BATCH", "BEACH", "BEAD", "BEAR", "BED", "BENCH", "BEND", "BENT",
+    "BEST", "BOLT", "BOOT", "BOUT", "BOUTS", "BOWER", "BUSH", "CANE", "COAL", "COMB", "CONE", "DALES", "DARK", "DEAR", "DIN", "DOWER",
+    "DOZE", "EAR", "EAST", "EIGHT", "EIGHTS", "FALL", "GAME", "GAP", "GLAD", "GLASS", "GLUE", "GOAL", "GOAT", "GOLD", "GOT", "GRAB",
+    "GRATES", "GREW", "GROWN", "HALL", "HEAL", "HID", "HIDE", "HIM", "LAGS", "LAKE", "LEND", "LIES", "LIMBS", "LIME", "LIMES", "LINES",
+    "LOAD", "LONE", "LOOK", "LOWERS", "MALL", "MEAL", "MEATS", "MEND", "MIGHT", "MINE", "MOLES", "MOTES", "NAIL", "NAILED", "NEAR", "NEAT",
+    "NEED", "NEEDED", "NET", "NIGHT", "NINE", "NONE", "NOON", "NOSE", "NOT", "NOTE", "NOW", "ODORS", "ORATES", "PAGE", "RAGE", "SEAL",
+    "SEALED", "SENT", "SHY", "SLAY", "SLAYED", "SLAYS", "STEEPS", "TAIL", "TALL", "TAR", "TAXES", "TEAR", "TEARS", "TIES", "TIGHT", "TIGHTS",
+    "TILE", "TILL", "TINE", "TINES", "TIRE", "TIRED", "TOCK", "TOLD", "TOLLS", "TOUR", "TYKE", "WAIL", "WAILED", "WAILS", "WALL", "WALLED",
+    "WALLS", "WALTZ", "WARN", "WATCH", "WATT", "WATTS", "WAXED", "WET", "WHITS", "WIDE", "WILD", "WINE", "WORE", "YEAR", "YEARS", "YELL",
+    "YELLS", "YET", "YOUR", "YOURS", "ZAP", "ZEAL", "ZIP", "ZONE"
+  ],
+  "blocklist": [
+    "FUCK", "SHIT", "CUNT", "COCK", "DICK", "PISS", "TWAT", "SLUT", "WHORE", "FAG", "NIGG", "RAPE", "NAZI", "KKK", "TITS", "CLIT",
+    "ANUS", "PENIS", "SEX"
+  ]
+}
