@@ -446,6 +446,6 @@ def draw_death(surface, run):
         y = rng.randrange(sh)
         pygame.draw.line(surface, (120, 20, 40), (0, y), (sw, y))
     gdev.text(surface, "SIGNAL LOST", (sw // 2, sh // 2 - 30), 40, gdev.RED, "center", bold=True)
-    gdev.text(surface, "REBOOTING AT %s :: INTEL AND KEYS KEPT :: HALF YOUR BITS LOST" %
+    gdev.text(surface, "REBOOTING AT %s :: INTEL AND KEYS KEPT :: A QUARTER OF YOUR BITS LOST" %
               run.progression.respawn_label(),
               (sw // 2, sh // 2 + 14), 14, gdev.WHITE, "center")

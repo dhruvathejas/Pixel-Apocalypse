@@ -74,10 +74,10 @@ DIALECT_MIN_W = 0.2             # a dialect glyph thinned below this weight drop
 ATTACK_LABELS = {"radial_burst": "R4D14L BUR5T", "port_beam": "P0RT B34M", "port_overload": "P0RT 0V3RL04D",
                  "packet_rain": "P4CK3T R41N", "blackout": "BL4CK0UT", "firewall_dome": "F1R3W4LL D0M3"}
 EXPLOIT_TEXT = {"LEXICON": "the first option set of every hack and breach chunk starts with 1 decoy struck",
-                "WIDE_PORT": "jack-in range 64px -> 96px",
-                "TRACE_DAMPER": "-25% TRACE per wrong pick: three strikes become four",
+                "WIDE_PORT": "jack-in range 96px -> 140px",
+                "TRACE_DAMPER": "-25% TRACE per wrong pick: five misses become seven",
                 "CHAIN_DAEMON": "OVERLOAD radius +50%",
-                "LONG_TURN": "TURN lasts 30s",
+                "LONG_TURN": "TURN lasts 45s",
                 "REMOTE_JACK": "hack a pinned target from range"}
 
 

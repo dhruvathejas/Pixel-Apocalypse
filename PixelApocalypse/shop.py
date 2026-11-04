@@ -19,7 +19,7 @@ TOOL_PRICE = 5
 WEAPON_UPGRADES = [
     ("SPLIT_NOCK", "BOW", "SPLIT NOCK", "a full-charge shot looses 3 arrows", 90),
     ("ARC_SHOT", "BOW", "ARC SHOT", "arrows lob over F1R3W4LL shields", 60),
-    ("MAG_PLUS", "PISTOL", "+2 MAGAZINE", "8 rounds before the reload", 60),
+    ("MAG_PLUS", "PISTOL", "+2 MAGAZINE", "12 rounds before the reload", 60),
     ("RICOCHET", "PISTOL", "RICOCHET", "bullets bounce once off walls", 90),
     ("LONG_EDGE", "KATANA", "LONG EDGE", "a wider, longer arc", 60),
     ("RIPOSTE", "KATANA", "RIPOSTE", "a parried hit answers with a 2-damage cut", 90),
@@ -27,10 +27,10 @@ WEAPON_UPGRADES = [
 
 TOOL_TEXT = {
     "LEXICON": "every first option set starts with 1 decoy struck",
-    "WIDE_PORT": "jack-in range 64 -> 96 px",
+    "WIDE_PORT": "jack-in range 96 -> 140 px",
     "TRACE_DAMPER": "-25% TRACE per wrong pick",
     "CHAIN_DAEMON": "OVERLOAD radius +50%",
-    "LONG_TURN": "TURN lasts 30 s",
+    "LONG_TURN": "TURN lasts 45 s",
     "REMOTE_JACK": "jack into a PINNED minion from range",
 }
 

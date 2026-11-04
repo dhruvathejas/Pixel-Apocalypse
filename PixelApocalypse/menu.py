@@ -552,15 +552,15 @@ class SettingsMenu(Screen):
 # ------------------------------------------------------------------ how to play
 
 CONTROLS = [
-    ("PLAY", [("WASD", "move (8 directions)"), ("MOUSE", "aim"), ("LMB", "fire / attack"),
+    ("PLAY", [("WASD", "move (8 directions)"), ("MOUSE", "aim"), ("LMB / RMB", "fire / parry (katana)"),
               ("R", "reload pistol"), ("SPACE", "dash (i-frames)"), ("1 2 3", "bow / pistol / katana"),
               ("WHEEL", "switch weapon"), ("HOLD F", "jack in / breach port"),
               ("F", "terminals: save + shop, hatch"), ("TAB", "decrypt log"), ("ESC", "pause")]),
     ("HACK :: DECODE", [("1 2 3", "pick option by slot"), ("LMB", "press option under pointer"),
                         ("ESC / RMB", "abort (clean, no TRACE)"), ("--", "you are rooted"),
                         ("--", "world runs at 30%")]),
-    ("HACK :: PAYLOAD", [("Z", "EXTRACT: delete it, bank the data"), ("X", "TURN: it fights for you 15s"),
-                         ("C", "OVERLOAD: EMP exposes nearby"), ("--", "1.2s window, default Z")]),
+    ("HACK :: PAYLOAD", [("Z", "EXTRACT: delete it, bank the data"), ("X", "TURN: it fights for you 25s"),
+                         ("C", "OVERLOAD: EMP exposes nearby"), ("--", "3s window, default Z")]),
     ("MENUS", [("W/S  ARROWS", "move"), ("ENTER SPACE", "select"), ("A/D", "change setting"),
                ("ESC", "back"), ("MOUSE", "hover + click")]),
 ]
@@ -664,13 +664,13 @@ class HowToScreen(Screen):
         gdev.text(surface, "THE RUN", (box.x + 8, box.y + 6), 12, gdev.CYAN, bold=True)
         lines = gdev.wrap("14 KEYS decode the name bar. Hack Key carriers, beat the five Daemons with a "
                           "ROOT BREACH, open the blast doors (4 / 8 Keys) and the Deep Core (12). "
-                          "Clean Nodes save. Death: back to the last Node, half your Bits lost.", 284, 12)
+                          "Clean Nodes save. Death: back to the last Node, 1/4 of your Bits lost.", 284, 12)
         for i, ln in enumerate(lines):
             gdev.text(surface, ln, (box.x + 8, box.y + 26 + i * 15), 12, gdev.GREEN)
 
     def _kill_or_hack(self, surface):
         y = 160
-        steps = [("FIREWALL", "shoot it down", gdev.AMBER), ("EXPOSED", "4s window, glitching", gdev.CYAN)]
+        steps = [("FIREWALL", "shoot it down", gdev.AMBER), ("EXPOSED", "9s window, glitching", gdev.CYAN)]
         x = 40
         for i, (name, sub, col) in enumerate(steps):
             r = pygame.Rect(x, y, 170, 48)
@@ -706,9 +706,9 @@ class HowToScreen(Screen):
         lines = [
             ("DECODE", "The packet is leetspeak. Target words glow magenta, one at a time. Pick the right"),
             ("", "reading from 3 buttons (click or 1-3). Every wrong button is a real glyph misreading."),
-            ("TRACE", "Wrong pick +35 (hasty pick +50). 100 = BACKTRACE: weapon jams, minion hardens."),
+            ("TRACE", "Wrong pick +20 (hasty pick +25). 100 = BACKTRACE: weapon jams, minion hardens."),
             ("TIMER", "Runs in real time while the world crawls at 30%. Other minions keep coming."),
-            ("PAYLOAD", "Z EXTRACT  /  X TURN  /  C OVERLOAD, 1.2s to choose. Zero mistakes = CLEAN."),
+            ("PAYLOAD", "Z EXTRACT  /  X TURN  /  C OVERLOAD, 3s to choose. Zero mistakes = CLEAN."),
         ]
         for i, (k, s) in enumerate(lines):
             gdev.text(surface, k, (box.x + 12, box.y + 32 + i * 22), 12, gdev.GREEN, bold=True)
