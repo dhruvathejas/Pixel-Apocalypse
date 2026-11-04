@@ -8,6 +8,11 @@ Weapons (doc 10, simplified):
   BOW     hold LMB to charge 0.2-1.0s, release to shoot; a full charge pierces
   PISTOL  6-round magazine, 1s reload (R, or automatic when empty)
   KATANA  3-hit arc combo at short range; RMB parry (0.15s window)
+
+Weapon upgrades (doc 10, bought with Bits at a Clean Node shop; Player.upgrades holds the ids):
+  SPLIT_NOCK  a full-charge bow shot looses 3 arrows      ARC_SHOT   arrows lob over F1R3W4LL shields
+  MAG_PLUS    pistol magazine 6 -> 8                       RICOCHET   bullets bounce once off walls
+  LONG_EDGE   wider, longer katana arc                     RIPOSTE    a parried hit answers with a slash
 """
 import math
 
@@ -16,39 +21,45 @@ import pygame
 import gdev
 
 SPEED = 180.0
-MAX_HP = 5
+MAX_HP = 10
 BODY_SIZE = (8, 10)             # collision box, centred on pos
 
 DASH_DIST = 96.0
 DASH_TIME = 0.15
-DASH_COOLDOWN = 1.2
-HURT_IFRAMES = 0.8
-RESPAWN_IFRAMES = 1.5
+DASH_COOLDOWN = 0.6
+HURT_IFRAMES = 1.4
+RESPAWN_IFRAMES = 3.0
 KNOCKBACK = 200.0               # px/s push away from whatever hit us
 KNOCK_TIME = 0.12
 
-PISTOL_MAG = 6
-PISTOL_RELOAD = 1.0
+PISTOL_MAG = 10
+PISTOL_RELOAD = 0.6
 PISTOL_INTERVAL = 0.12          # fastest click rate
 PISTOL_AUTO = 0.2               # repeat rate while LMB is held
 BULLET_SPEED = 520.0
 BULLET_LIFE = 1.2               # ~620px, just past the screen edge
 
 BOW_MIN = 0.2                   # hold at least this long or the arrow is not loosed
-BOW_FULL = 1.0
+BOW_FULL = 0.6
 BOW_COOLDOWN = 0.3
 BOW_DRAW_SLOW = 0.75            # walking speed while drawing the bow
 ARROW_SPEED = (380.0, 720.0)    # min / full charge
 ARROW_LIFE = 1.0
+CORE_ARROW_MULT = 2             # an arrow hits a Daemon's exposed core twice as hard (bow DPS ~ pistol)
+SPLIT_NOCK_DEG = 10.0           # side arrows of a Split Nock shot
+MAG_PLUS = 2
+RICOCHET_BOUNCES = 1
+LONG_EDGE_BOX = 12              # extra slash box size / reach with Long Edge
+RIPOSTE_DAMAGE = 2
 
-KATANA_DAMAGE = (1, 1, 2)       # combo hits 1, 2, 3
+KATANA_DAMAGE = (2, 2, 3)       # combo hits 1, 2, 3
 KATANA_RANGE = 16               # slash box centre, px in front of the body
 KATANA_BOX = 30
 KATANA_INTERVAL = 0.2
 KATANA_RESET = 0.45             # combo drops if the next press is later than this
 KATANA_FINISH = 0.4             # pause after the third hit
 KATANA_BUFFER = 0.15
-PARRY_WINDOW = 0.15
+PARRY_WINDOW = 0.3
 PARRY_COOLDOWN = 0.5
 HITSTOP = 0.06                  # Game may freeze the world while player.hitstop > 0
 
@@ -191,6 +202,8 @@ class Projectile(object):
         self.life = life
         self.max_life = life
         self.world_hit = None
+        self.core_mult = 1          # x damage on a Daemon's exposed core (arrows: CORE_ARROW_MULT)
+        self.bounces = 0            # Ricochet: wall bounces left
         self.rect = pygame.Rect(0, 0, size, size)
         self.rect.center = (int(round(self.pos.x)), int(round(self.pos.y)))
         self.angle = 0.0            # slash only: aim angle (radians) and swing direction
@@ -213,15 +226,32 @@ class Projectile(object):
             self.pos += step
             self.rect.center = (int(round(self.pos.x)), int(round(self.pos.y)))
             hit = world.projectile_hit(self.rect)
+            if hit is not None and hit[0] == "wall" and self.bounces > 0:
+                self.bounces -= 1
+                self._bounce(world, step)
+                break
             if hit is not None:
                 self.world_hit = hit
                 self.alive = False
                 if hit[0] == "bar" and hit[2] is not None and self.team == "player":
                     hit[2].flash = 0.12
-                    hit[2].hits += self.damage
+                    hit[2].hits += self.damage * self.core_mult
                 break
         if self.life <= 0:
             self.alive = False
+
+    def _bounce(self, world, step):
+        """Ricochet: step back out of the wall and mirror the velocity on the axis that hit."""
+        self.pos -= step
+        probe = self.rect.copy()
+        probe.center = (int(round(self.pos.x + step.x)), int(round(self.pos.y)))
+        if world.projectile_hit(probe) is not None:
+            self.vel.x = -self.vel.x
+        probe.center = (int(round(self.pos.x)), int(round(self.pos.y + step.y)))
+        if world.projectile_hit(probe) is not None:
+            self.vel.y = -self.vel.y
+        self.rect.center = (int(round(self.pos.x)), int(round(self.pos.y)))
+        self.hit_ids = set()
 
     def draw(self, surface, camera):
         if self.kind == "slash":
@@ -252,6 +282,7 @@ class Player(object):
       heal(n), respawn(pos), jam(seconds)
       weapon_name() -> "PISTOL"|"BOW"|"KATANA"
       weapon_hud() -> {"name", "ammo", "mag", "reload", "charge", "jammed"}
+      upgrades set of weapon upgrade ids (doc 10 shop), add_upgrade(uid)
     Extras other modules may read:
       dashing (bool), parrying (bool), parried_from (pos of the last parried hit or None),
       hitstop (seconds; set when a katana hit lands -- Game may freeze the world for it)
@@ -266,6 +297,7 @@ class Player(object):
         self.weapon_index = 1                   # start with the pistol
         self.projectiles = []
         self.fx = []                            # [kind, x, y, t, extra] short visual effects
+        self.upgrades = set()                   # weapon upgrades bought at a Clean Node (kept on death)
         self.reset_state()
         self._sync_rect()
 
@@ -287,8 +319,8 @@ class Player(object):
         self.dash_cd = 0.0
         self.dash_dir = pygame.math.Vector2(1, 0)
         self.trail = []             # dash after-images [(x, y, sprite, age)]
-        self.ammo = PISTOL_MAG
-        self.mag = PISTOL_MAG
+        self.mag = self.mag_size()
+        self.ammo = self.mag
         self.reload_t = 0.0
         self.fire_cd = 0.0
         self.muzzle_t = 0.0
@@ -311,6 +343,15 @@ class Player(object):
         self.rect.center = (int(round(self.pos.x)), int(round(self.pos.y)))
 
     # ------------------------------------------------------------ queries
+
+    def mag_size(self):
+        return PISTOL_MAG + (MAG_PLUS if "MAG_PLUS" in self.upgrades else 0)
+
+    def add_upgrade(self, uid):
+        self.upgrades.add(uid)
+        if uid == "MAG_PLUS":
+            self.mag = self.mag_size()
+            self.ammo = self.mag
 
     def weapon_name(self):
         return self.weapon_slots[self.weapon_index]
@@ -512,7 +553,10 @@ class Player(object):
     def _fire_pistol(self, clicked):
         v = self._aim_vec()
         muzzle = self.hand_pos() + v * 5
-        self.projectiles.append(Projectile(muzzle, v * BULLET_SPEED, 1, "bullet", "player", 4, BULLET_LIFE))
+        b = Projectile(muzzle, v * BULLET_SPEED, 1, "bullet", "player", 4, BULLET_LIFE)
+        if "RICOCHET" in self.upgrades:
+            b.bounces = RICOCHET_BOUNCES
+        self.projectiles.append(b)
         self.ammo -= 1
         self.fire_cd = PISTOL_INTERVAL if clicked else PISTOL_AUTO
         self.muzzle_t = 0.05
@@ -524,22 +568,36 @@ class Player(object):
         full = self.charge_t >= BOW_FULL
         v = self._aim_vec()
         speed = ARROW_SPEED[0] + (ARROW_SPEED[1] - ARROW_SPEED[0]) * k
-        p = Projectile(self.hand_pos() + v * 4, v * speed, 2 if full else 1, "arrow", "player", 4,
-                       ARROW_LIFE, pierce=full)
-        p.full_charge = full
-        self.projectiles.append(p)
+        spread = (-SPLIT_NOCK_DEG, 0.0, SPLIT_NOCK_DEG) if full and "SPLIT_NOCK" in self.upgrades else (0.0,)
+        for deg in spread:
+            u = v.rotate(deg)
+            p = Projectile(self.hand_pos() + u * 4, u * speed, 2 if full else 1, "arrow", "player", 4,
+                           ARROW_LIFE, pierce=full)
+            p.full_charge = full and deg == 0.0      # only the centre arrow pins (doc 10)
+            p.core_mult = CORE_ARROW_MULT
+            p.arc = "ARC_SHOT" in self.upgrades      # lobs over F1R3W4LL shields
+            self.projectiles.append(p)
         self.fire_cd = BOW_COOLDOWN
 
-    def _slash(self):
+    def _slash(self, toward=None, damage=None):
         if self.combo_t > KATANA_RESET or self.combo >= 3:
             self.combo = 0
-        dmg = KATANA_DAMAGE[self.combo]
+        dmg = KATANA_DAMAGE[self.combo] if damage is None else damage
         self.combo += 1
         self.combo_t = 0.0
         self.fire_cd = KATANA_FINISH if self.combo >= 3 else KATANA_INTERVAL
         v = self._aim_vec()
+        if toward is not None:
+            d = pygame.math.Vector2(toward) - self.pos
+            if d.length_squared() > 1:
+                v = d.normalize()
+                self.aim_angle = math.atan2(v.y, v.x)
         size = KATANA_BOX + (6 if self.combo == 3 else 0)
-        centre = self.pos + v * KATANA_RANGE
+        reach = KATANA_RANGE
+        if "LONG_EDGE" in self.upgrades:
+            size += LONG_EDGE_BOX
+            reach += LONG_EDGE_BOX // 2
+        centre = self.pos + v * reach
         p = Projectile(centre, (0, 0), dmg, "slash", "player", size, 0.08, pierce=True)
         p.angle = self.aim_angle
         p.swing = 1 if self.combo % 2 else -1
@@ -578,6 +636,8 @@ class Player(object):
         if self.parrying:
             self.parried_from = tuple(from_pos) if from_pos is not None else None
             self.parry_flash = 0.15
+            if "RIPOSTE" in self.upgrades and self.weapon_name() == "KATANA" and not self.rooted:
+                self._slash(toward=from_pos, damage=RIPOSTE_DAMAGE)     # the counter-cut
             return False
         self.hp = max(0, self.hp - int(n))
         self.just_hit = True

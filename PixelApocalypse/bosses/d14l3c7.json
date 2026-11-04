@@ -1,0 +1,74 @@
+{
+  "id": "d14l3c7",
+  "slot": 5,
+  "rack_id": "D",
+  "leet_name": "D14|_3C7",
+  "plain_name": "DIALECT",
+  "submodel": "VOICE",
+  "act": 3,
+  "firewall_points": 5,
+  "core_bars": [
+    0,
+    1
+  ],
+  "core_hp": 14,
+  "spawn_table": {
+    "B1T": 0.3,
+    "P1NG": 0.25,
+    "PR0B3": 0.2,
+    "F1R3W4LL": 0.25,
+    "W0RM": 0.1
+  },
+  "spawn_pattern": "vent_burst",
+  "max_alive": 9,
+  "modifiers": [
+    {
+      "id": "mirror_dialect",
+      "worst_glyphs": 5,
+      "decoys_from_history": true,
+      "thin_on_correct": true
+    }
+  ],
+  "script": null,
+  "phases": [
+    {
+      "core": 0,
+      "attacks": [
+        "port_beam",
+        "packet_rain",
+        "blackout"
+      ],
+      "spawn_rate": 1.0
+    },
+    {
+      "core": 1,
+      "attacks": [
+        "radial_burst",
+        "port_overload",
+        "firewall_dome"
+      ],
+      "spawn_rate": 1.16
+    }
+  ],
+  "exposure_window_s": 18,
+  "adaptation_pool": [
+    "TIER2_SHARE",
+    "LEAD_SHOTS",
+    "FIREWALL_WEIGHT",
+    "MORE_PROBES"
+  ],
+  "password_word": "HANDWRITING",
+  "password_chunks": [
+    "HAND",
+    "WRIT",
+    "ING"
+  ],
+  "password_intel_id": "D-05",
+  "core_dump": {
+    "text_id": "dump_D",
+    "key_glyph_index": 13,
+    "exploit": "LONG_TURN",
+    "stat": "worst_glyphs"
+  },
+  "fight_trigger_px": 240
+}

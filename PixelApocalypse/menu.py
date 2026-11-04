@@ -21,12 +21,13 @@ import pygame
 import gdev
 import hud
 import settings as settings_mod
+import shop
 
 game_start = False
 
 TITLE = "P1X3L /-\\P0C/-\\LYP53"
 SUBTITLE = "T H R E A T   M O D E L"
-VERSION = "v0.1 PROTOTYPE"
+VERSION = "v0.2.0-alpha THREAT MODEL"
 
 UP_KEYS = (pygame.K_UP, pygame.K_w)
 DOWN_KEYS = (pygame.K_DOWN, pygame.K_s)
@@ -268,11 +269,32 @@ class ListMenu(Screen):
 
 
 class MainMenu(ListMenu):
+    """CONTINUE (only when a save exists), NEW GAME, HOW TO PLAY, SETTINGS, DECRYPT, QUIT.
+    has_save: callable -> bool, asked every time the menu opens."""
     back_action = None
 
-    def __init__(self, crt):
-        ListMenu.__init__(self, crt, [("PLAY", "play"), ("HOW TO PLAY", "howto"), ("SETTINGS", "settings"),
-                                      ("INTEL LOG", "intel"), ("QUIT", "quit")], top=222)
+    def __init__(self, crt, has_save=None):
+        self.has_save = has_save or (lambda: False)
+        ListMenu.__init__(self, crt, [], top=210)
+        self._build()
+
+    def _build(self):
+        items = [("CONTINUE", "continue")] if self.has_save() else []
+        items += [("NEW GAME", "new_game"), ("HOW TO PLAY", "howto"), ("SETTINGS", "settings"),
+                  ("DECRYPT LOG", "intel"), ("QUIT", "quit")]
+        self.items = items
+        self.selected = min(self.selected, len(items) - 1)
+
+    def index_of(self, action):
+        for i, (_label, a) in enumerate(self.items):
+            if a == action:
+                return i
+        return None
+
+    def open(self):
+        ListMenu.open(self)
+        self._build()
+        self.selected = 0
 
     def handle_event(self, e):
         if is_key(e, (pygame.K_ESCAPE,)):
@@ -299,20 +321,129 @@ class MainMenu(ListMenu):
 
 
 class PauseMenu(ListMenu):
+    """Game sets .info (last-save line) before opening."""
     back_action = "resume"
 
     def __init__(self, crt):
-        ListMenu.__init__(self, crt, [("RESUME", "resume"), ("SETTINGS", "settings"),
-                                      ("HOW TO PLAY", "howto"), ("QUIT TO MENU", "quit_to_menu")], top=196)
+        ListMenu.__init__(self, crt, [("RESUME", "resume"), ("DECRYPT LOG", "intel"), ("SETTINGS", "settings"),
+                                      ("HOW TO PLAY", "howto"), ("QUIT TO MENU", "quit_to_menu")], top=190)
+        self.info = ""
 
     def draw(self, surface):
         self.crt.background(surface, self.frozen, 212)
         w = surface.get_width()
-        draw_title(surface, self.t + 1.0, (w // 2, 96), 30)
-        draw_glow_text(surface, "// PAUSED", (w // 2, 146), 20, gdev.AMBER, glow=(90, 60, 10))
-        gdev.text(surface, "the world is frozen. Kernel is not.", (w // 2, 166), 12, gdev.GREEN_DIM, "midtop")
-        self.draw_items(surface)
+        draw_title(surface, self.t + 1.0, (w // 2, 90), 30)
+        draw_glow_text(surface, "// PAUSED", (w // 2, 138), 20, gdev.AMBER, glow=(90, 60, 10))
+        gdev.text(surface, "the world is frozen. Kernel is not.", (w // 2, 156), 12, gdev.GREEN_DIM, "midtop")
+        box = self.draw_items(surface)
+        if self.info:
+            gdev.text(surface, self.info, (w // 2, box.bottom + 10), 12, gdev.GREEN_MID, "midtop")
         draw_footer(surface, "W/S  NAVIGATE    ENTER  SELECT    ESC  RESUME")
+        self.crt.overlay(surface)
+
+
+# ------------------------------------------------------------------ Clean Node shop
+
+class ShopScreen(Screen):
+    """The Clean Node shop (doc 10). Game sets .run before opening; rows come from shop.items().
+    W/S select, Enter / click buy, Esc / BACK return to PLAY. handle_event returns "back" or
+    "buy:<item id>" (Game buys and sets .message)."""
+    row_h = 22
+
+    def __init__(self, crt):
+        Screen.__init__(self, crt)
+        self.run = None
+        self.rows = []
+        self.selected = 0
+        self.message = ""
+        self.message_ok = True
+
+    def open(self):
+        Screen.open(self)
+        self.refresh()
+        self.message = ""
+
+    def refresh(self):
+        self.rows = (shop.items(self.run) if self.run is not None else []) + [None]     # None = BACK
+        self.selected = min(self.selected, len(self.rows) - 1)
+
+    def row_rects(self):
+        w = 700
+        x = gdev.INTERNAL_SIZE[0] // 2 - w // 2
+        return [pygame.Rect(x, 112 + i * (self.row_h + 3) + (8 if i == len(self.rows) - 1 else 0), w, self.row_h)
+                for i in range(len(self.rows))]
+
+    def _pick(self, i):
+        row = self.rows[i]
+        if row is None:
+            return "back"
+        return "buy:" + row["id"]
+
+    def handle_event(self, e):
+        n = len(self.rows)
+        if is_key(e, UP_KEYS):
+            self.selected = (self.selected - 1) % n
+        elif is_key(e, DOWN_KEYS):
+            self.selected = (self.selected + 1) % n
+        elif is_key(e, OK_KEYS):
+            return self._pick(self.selected)
+        elif is_key(e, (pygame.K_ESCAPE, pygame.K_f)):
+            return "back"
+        elif e.type == pygame.MOUSEMOTION:
+            for i, r in enumerate(self.row_rects()):
+                if r.collidepoint(e.pos):
+                    self.selected = i
+        elif is_click(e):
+            for i, r in enumerate(self.row_rects()):
+                if r.collidepoint(e.pos):
+                    self.selected = i
+                    return self._pick(i)
+        elif is_click(e, 3):
+            return "back"
+        return None
+
+    def draw(self, surface):
+        self.crt.background(surface, self.frozen)
+        run = self.run
+        bits = run.bits if run is not None else 0
+        shards = run.progression.shards if run is not None else 0
+        draw_header(surface, "CLEAN NODE :: SH0P", "saved and healed. BITS buy weapon upgrades, SHARDS buy tools")
+        gdev.text(surface, "BITS %d" % bits, (gdev.INTERNAL_SIZE[0] // 2 - 20, 92), 16, gdev.AMBER, "topright", True)
+        gdev.text(surface, "SHARDS %d" % shards, (gdev.INTERNAL_SIZE[0] // 2 + 20, 92), 16, gdev.CYAN, "topleft", True)
+        for i, (row, r) in enumerate(zip(self.rows, self.row_rects())):
+            sel = i == self.selected
+            if row is None:
+                r = pygame.Rect(r.centerx - 80, r.y, 160, r.h)
+                if sel:
+                    pygame.draw.rect(surface, gdev.GREEN, r)
+                else:
+                    pygame.draw.rect(surface, gdev.GREEN_DIM, r, 1)
+                gdev.text(surface, "BACK", r.center, 14, gdev.BG if sel else gdev.GREEN_MID, "center", True)
+                continue
+            gdev.panel(surface, r, fill=(12, 48, 24) if sel else gdev.BG_PANEL, alpha=225,
+                       border=gdev.GREEN if sel else gdev.GREEN_DIM)
+            if sel:
+                pygame.draw.rect(surface, gdev.GREEN, (r.x, r.y, 4, r.h))
+            tool = row["kind"] == "tool"
+            gdev.text(surface, row["weapon"], (r.x + 12, r.centery), 12, gdev.CYAN if tool else gdev.GREEN_DIM,
+                      "midleft", True)
+            col = gdev.GREEN if sel else gdev.GREEN_MID
+            if row["owned"]:
+                col = gdev.GREEN_DIM
+            gdev.text(surface, typed(row["label"], self.t - i * 0.03), (r.x + 82, r.centery), 14, col, "midleft", sel)
+            gdev.text(surface, row["desc"], (r.x + 236, r.centery), 12, gdev.GREEN_DIM if row["owned"] else
+                      gdev.GREEN_MID, "midleft")
+            if row["owned"]:
+                tag, tcol = "OWNED", gdev.GREEN_DIM
+            else:
+                tag = "%d %s" % (row["price"], row["currency"])
+                tcol = (gdev.CYAN if tool else gdev.AMBER) if row["affordable"] else gdev.RED
+            gdev.text(surface, tag, (r.right - 12, r.centery), 12, tcol, "midright", True)
+        if self.message:
+            y = self.row_rects()[-1].bottom + 12
+            gdev.text(surface, "> " + self.message, (gdev.INTERNAL_SIZE[0] // 2, y), 14,
+                      gdev.CYAN if self.message_ok else gdev.RED, "midtop", True)
+        draw_footer(surface, "W/S  SELECT    ENTER / CLICK  BUY    ESC / F  BACK")
         self.crt.overlay(surface)
 
 
@@ -321,7 +452,7 @@ class PauseMenu(ListMenu):
 class SettingsMenu(Screen):
     """Rows built from settings.OPTIONS plus BACK. Left/Right/Enter/click cycle a value.
     on_change(key) is called after every change (Game applies + saves)."""
-    row_h = 30
+    row_h = 24
 
     def __init__(self, crt, settings, on_change=None):
         Screen.__init__(self, crt)
@@ -333,7 +464,7 @@ class SettingsMenu(Screen):
     def row_rects(self):
         w = 560
         x = gdev.INTERNAL_SIZE[0] // 2 - w // 2
-        return [pygame.Rect(x, 104 + i * (self.row_h + 4), w, self.row_h) for i in range(len(self.rows))]
+        return [pygame.Rect(x, 92 + i * (self.row_h + 3), w, self.row_h) for i in range(len(self.rows))]
 
     def _arrows(self, r):
         left = pygame.Rect(r.right - 190, r.y, 28, r.h)
@@ -385,7 +516,7 @@ class SettingsMenu(Screen):
         for i, (key, r) in enumerate(zip(self.rows, rects)):
             sel = i == self.selected
             if key == "back":
-                r = pygame.Rect(r.centerx - 80, r.y + 8, 160, r.h)
+                r = pygame.Rect(r.centerx - 80, r.y + 4, 160, r.h)
                 if sel:
                     pygame.draw.rect(surface, gdev.GREEN, r)
                 else:
@@ -411,7 +542,7 @@ class SettingsMenu(Screen):
         for o in settings_mod.OPTIONS:
             if o[0] == key:
                 help_text = o[3]
-        hr = pygame.Rect(rects[0].x, rects[-1].bottom + 16, rects[0].w, 26)
+        hr = pygame.Rect(rects[0].x, rects[-1].bottom + 10, rects[0].w, 24)
         gdev.panel(surface, hr, alpha=160, border=None)
         gdev.text(surface, "> " + help_text, (hr.x + 10, hr.centery), 12, gdev.AMBER, "midleft")
         draw_footer(surface, "W/S  SELECT    A/D  CHANGE    ENTER  CYCLE    ESC  BACK")
@@ -423,8 +554,8 @@ class SettingsMenu(Screen):
 CONTROLS = [
     ("PLAY", [("WASD", "move (8 directions)"), ("MOUSE", "aim"), ("LMB", "fire / attack"),
               ("R", "reload pistol"), ("SPACE", "dash (i-frames)"), ("1 2 3", "bow / pistol / katana"),
-              ("WHEEL", "switch weapon"), ("HOLD F", "jack in to EXPOSED minion"),
-              ("TAB", "intel log"), ("ESC", "pause")]),
+              ("WHEEL", "switch weapon"), ("HOLD F", "jack in / breach port"),
+              ("F", "terminals: save + shop, hatch"), ("TAB", "decrypt log"), ("ESC", "pause")]),
     ("HACK :: DECODE", [("1 2 3", "pick option by slot"), ("LMB", "press option under pointer"),
                         ("ESC / RMB", "abort (clean, no TRACE)"), ("--", "you are rooted"),
                         ("--", "world runs at 30%")]),
@@ -530,10 +661,10 @@ class HowToScreen(Screen):
         x, y = 642, 248
         box = pygame.Rect(x, y, 300, 128)
         gdev.panel(surface, box, alpha=210, border=gdev.CYAN)
-        gdev.text(surface, "PROTOTYPE OBJECTIVE", (box.x + 8, box.y + 6), 12, gdev.CYAN, bold=True)
-        lines = gdev.wrap("Enter Rack A's zone. Strip minion firewalls, then hack 5 different minions. "
-                          "Their intel leads to the first KEY of the name bar. Death respawns you at "
-                          "Clean Node 1: intel is kept, half your Bits are lost.", 284, 12)
+        gdev.text(surface, "THE RUN", (box.x + 8, box.y + 6), 12, gdev.CYAN, bold=True)
+        lines = gdev.wrap("14 KEYS decode the name bar. Hack Key carriers, beat the five Daemons with a "
+                          "ROOT BREACH, open the blast doors (4 / 8 Keys) and the Deep Core (12). "
+                          "Clean Nodes save. Death: back to the last Node, half your Bits lost.", 284, 12)
         for i, ln in enumerate(lines):
             gdev.text(surface, ln, (box.x + 8, box.y + 26 + i * 15), 12, gdev.GREEN)
 
@@ -620,27 +751,35 @@ def _arrow(surface, a, b, color):
 # ------------------------------------------------------------------ intel log
 
 class IntelLogScreen(Screen):
-    """Decoded fragments (left list, right reader) and the glyph codex (bottom).
-    Game sets .intel (hack.IntelLog or None) and .codex (hack.Codex or None) before opening."""
+    """The DECRYPT screen (doc 8.2): name bar, decoded fragments grouped by act (left list, right
+    reader) and the glyph codex (bottom). Game sets .intel (hack.IntelLog or None), .codex
+    (hack.Codex or None) and .run (Run or None, for the name bar) before opening."""
+    ROWS = 8
+    ACT_ORDER = {"P": 0, "I": 1, "II": 2, "III": 3, "": 4}
 
     def __init__(self, crt):
         Screen.__init__(self, crt)
         self.intel = None
         self.codex = None
+        self.run = None
         self.selected = 0
         self.scroll = 0
         self.hover_back = False
 
     def entries(self):
-        return list(self.intel.entries) if self.intel is not None else []
+        if self.intel is None:
+            return []
+        ents = list(self.intel.entries)
+        ents.sort(key=lambda e: self.ACT_ORDER.get(str(e.get("act", "")), 4))     # grouped by act (stable)
+        return ents
 
     def back_rect(self):
         return pygame.Rect(gdev.INTERNAL_SIZE[0] - 120, 22, 100, 24)
 
     def list_rects(self):
         out = []
-        for i in range(min(9, len(self.entries()) - self.scroll)):
-            out.append((self.scroll + i, pygame.Rect(18, 96 + i * 28, 320, 24)))
+        for i in range(min(self.ROWS, len(self.entries()) - self.scroll)):
+            out.append((self.scroll + i, pygame.Rect(18, 118 + i * 28, 320, 24)))
         return out
 
     def handle_event(self, e):
@@ -673,16 +812,20 @@ class IntelLogScreen(Screen):
             return "back"
         if self.selected < self.scroll:
             self.scroll = self.selected
-        elif self.selected >= self.scroll + 9:
-            self.scroll = self.selected - 8
+        elif self.selected >= self.scroll + self.ROWS:
+            self.scroll = self.selected - self.ROWS + 1
         return None
 
     def draw(self, surface):
         self.crt.background(surface, self.frozen)
         ents = self.entries()
         n_red = len([e for e in ents if e.get("redacted")])
-        draw_header(surface, "INTEL LOG", "%d fragment%s decoded  ::  %d redacted" %
+        draw_header(surface, "DECRYPT", "%d fragment%s decoded  ::  %d redacted" %
                     (len(ents), "" if len(ents) == 1 else "s", n_red))
+        if self.run is not None:
+            handle = self.run.handle if self.run.progression.key14_played else None
+            hud.draw_name_bar(surface, self.run, (surface.get_width() // 2, 88), 12, key_anim={}, t=self.t,
+                              handle=handle)
         if not ents:
             r = pygame.Rect(180, 130, 600, 130)
             gdev.panel(surface, r, alpha=215, border=gdev.GREEN_DIM)
@@ -701,7 +844,8 @@ class IntelLogScreen(Screen):
                 else:
                     gdev.panel(surface, r, alpha=190, border=gdev.GREEN_DIM)
                 col = gdev.BG if sel else gdev.GREEN_MID
-                gdev.text(surface, "%02d" % (i + 1), (r.x + 8, r.centery), 12, col, "midleft", True)
+                act = str(e.get("act", "")) or "-"
+                gdev.text(surface, "%-3s" % act, (r.x + 8, r.centery), 12, col, "midleft", True)
                 title = str(e.get("title", e.get("id", "?")))
                 if gdev.text_size(title, 12)[0] > 200:
                     while gdev.text_size(title + "..", 12)[0] > 200:
@@ -714,9 +858,10 @@ class IntelLogScreen(Screen):
                 else:
                     tcol = gdev.BG if sel else gdev.CYAN
                 gdev.text(surface, tag, (r.right - 8, r.centery), 12, tcol, "midright", True)
-            if len(ents) > 9:
-                gdev.text(surface, "%d-%d of %d" % (self.scroll + 1, min(len(ents), self.scroll + 9), len(ents)),
-                          (178, 96 + 9 * 28), 12, gdev.GREEN_DIM, "midtop")
+            if len(ents) > self.ROWS:
+                gdev.text(surface, "%d-%d of %d" % (self.scroll + 1, min(len(ents), self.scroll + self.ROWS),
+                                                    len(ents)), (178, 118 + self.ROWS * 28 - 4), 12,
+                          gdev.GREEN_DIM, "midtop")
             self._reader(surface, ents[self.selected])
         self._codex(surface)
         br = self.back_rect()
@@ -729,7 +874,7 @@ class IntelLogScreen(Screen):
         self.crt.overlay(surface)
 
     def _reader(self, surface, e):
-        r = pygame.Rect(352, 96, 590, 248)
+        r = pygame.Rect(352, 118, 590, 226)
         gdev.panel(surface, r, alpha=225, border=gdev.CYAN if not e.get("redacted") else gdev.MAGENTA)
         pygame.draw.rect(surface, gdev.GREEN_DARK, (r.x + 1, r.y + 1, r.w - 2, 20))
         gdev.text(surface, "%s :: %s :: %s" % (e.get("id", "?"), e.get("source", "?"), e.get("tier", "")),
@@ -764,8 +909,12 @@ class IntelLogScreen(Screen):
             gdev.text(surface, "no glyphs tested yet. Every pick you make is recorded here: right / wrong per glyph.",
                       (r.x + 10, r.y + 40), 12, gdev.GREEN_DIM)
             return
-        gdev.text(surface, "glyph  letter  right/wrong", (r.right - 10, r.y + 6), 12, gdev.GREEN_DIM,
-                  "topright")
+        head = "glyph  letter  right/wrong"
+        worst = self.codex.worst() if hasattr(self.codex, "worst") else None
+        top = self.codex.top_misread(worst) if worst and hasattr(self.codex, "top_misread") else None
+        if top:
+            head = "you read %s as %s (%dx)  ::  %s" % (worst, top[0], top[1], head)
+        gdev.text(surface, head, (r.right - 10, r.y + 6), 12, gdev.GREEN_DIM, "topright")
         x, y = r.x + 10, r.y + 26
         for glyph, letter, hits, misses in rows:
             gw = gdev.text_size(glyph, 13, True)[0]
@@ -786,87 +935,342 @@ class IntelLogScreen(Screen):
             x = cell.right + 6
 
 
-# ------------------------------------------------------------------ victory
+# ------------------------------------------------------------------ enter handle
 
-class VictoryScreen(Screen):
-    """PROTOTYPE COMPLETE + stats. Game sets .stats (dict) and .keys (set of name-bar indices)."""
+HANDLE_MIN, HANDLE_MAX = 3, 12
+LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+
+class HandleScreen(Screen):
+    """ENTER HANDLE (doc 8.1): the game's only text field. Letters A-Z, 3-12 long. Typing,
+    Backspace, Enter; or click the on-screen letter grid (DEL / OK). Esc goes back.
+    Returns "handle_ok" (read .value) or "back"."""
+    COLS = 13
 
     def __init__(self, crt):
         Screen.__init__(self, crt)
-        self.stats = {}
-        self.keys = set([0])
-        self.selected = 0
-        self.items = [("PLAY AGAIN", "play_again"), ("MAIN MENU", "main_menu")]
+        self.value = ""
+        self.focus = 0              # index into the grid: 0-25 letters, 26 DEL, 27 OK
+        self.error_t = 0.0
 
-    INPUT_DELAY_S = 0.3 + 7 * 0.12      # the 7 stat rows have typed in
+    def reset(self):
+        self.value = ""
+        self.focus = 0
+        self.error_t = 0.0
 
-    def item_rects(self):
-        cx = gdev.INTERNAL_SIZE[0] // 2
-        return [pygame.Rect(cx - 206, 404, 200, 30), pygame.Rect(cx + 6, 404, 200, 30)]
+    def ok(self):
+        return HANDLE_MIN <= len(self.value) <= HANDLE_MAX
+
+    def cell_rects(self):
+        w, h, gap = 40, 30, 6
+        total = self.COLS * w + (self.COLS - 1) * gap
+        x0 = gdev.INTERNAL_SIZE[0] // 2 - total // 2
+        out = []
+        for i in range(26):
+            out.append(pygame.Rect(x0 + (i % self.COLS) * (w + gap), 268 + (i // self.COLS) * (h + gap), w, h))
+        out.append(pygame.Rect(x0, 268 + 2 * (h + gap) + 6, 3 * w + 2 * gap, h))
+        out.append(pygame.Rect(x0 + total - (3 * w + 2 * gap), 268 + 2 * (h + gap) + 6, 3 * w + 2 * gap, h))
+        return out
+
+    def _press(self, i):
+        if i < 26:
+            if len(self.value) < HANDLE_MAX:
+                self.value += LETTERS[i]
+        elif i == 26:
+            self.value = self.value[:-1]
+        elif self.ok():
+            return "handle_ok"
+        else:
+            self.error_t = 1.2
+        return None
 
     def handle_event(self, e):
-        # A dash (Space) or click still held from the Key flourish must not skip the stats.
-        if self.t < self.INPUT_DELAY_S and e.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
-            return None
-        if is_key(e, LEFT_KEYS + UP_KEYS):
-            self.selected = (self.selected - 1) % 2
-        elif is_key(e, RIGHT_KEYS + DOWN_KEYS):
-            self.selected = (self.selected + 1) % 2
-        elif is_key(e, OK_KEYS):
-            return self.items[self.selected][1]
-        elif is_key(e, (pygame.K_ESCAPE,)):
-            return "main_menu"
+        if e.type == pygame.KEYDOWN:
+            if e.key == pygame.K_ESCAPE:
+                return "back"
+            if e.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+                return self._press(27)
+            if e.key == pygame.K_BACKSPACE:
+                return self._press(26)
+            if pygame.K_a <= e.key <= pygame.K_z:
+                return self._press(e.key - pygame.K_a)
+            if e.key == pygame.K_LEFT:
+                self.focus = (self.focus - 1) % 28
+            elif e.key == pygame.K_RIGHT:
+                self.focus = (self.focus + 1) % 28
+            elif e.key == pygame.K_UP:
+                self.focus = max(0, self.focus - self.COLS)
+            elif e.key == pygame.K_DOWN:
+                self.focus = min(27, self.focus + self.COLS)
+            elif e.key == pygame.K_SPACE:
+                return self._press(self.focus)
         elif e.type == pygame.MOUSEMOTION:
-            for i, r in enumerate(self.item_rects()):
+            for i, r in enumerate(self.cell_rects()):
                 if r.collidepoint(e.pos):
-                    self.selected = i
+                    self.focus = i
         elif is_click(e):
-            for i, r in enumerate(self.item_rects()):
+            for i, r in enumerate(self.cell_rects()):
                 if r.collidepoint(e.pos):
-                    return self.items[i][1]
+                    self.focus = i
+                    return self._press(i)
+        elif is_click(e, 3):
+            return self._press(26)
         return None
+
+    def update(self, dt):
+        Screen.update(self, dt)
+        self.error_t = max(0.0, self.error_t - dt)
 
     def draw(self, surface):
         self.crt.background(surface)
         w = surface.get_width()
-        shade(surface, (0, 22, w, 136), 175)
-        draw_glow_text(surface, "PROTOTYPE COMPLETE", (w // 2, 50), 38, gdev.CYAN, glow=(20, 90, 110))
-        gdev.text(surface, typed("KEY 1/14 RECOVERED  ::  first worm origin: INTERNAL.", self.t, 60),
-                  (w // 2, 78), 14, gdev.GREEN, "midtop")
-        anim = {}
-        hud.draw_name_bar(surface, None, (w // 2, 106), 16, keys=self.keys, key_anim=anim, t=self.t)
-        gdev.text(surface, "the name bar is the evidence. 13 clusters still encoded.", (w // 2, 140), 12,
-                  gdev.GREEN_MID, "midtop")
-        s = self.stats
-        t = int(s.get("time", 0))
-        rows = [("RUN TIME", "%02d:%02d" % (t // 60, t % 60)),
-                ("MINIONS KILLED", str(s.get("kills", 0))),
-                ("MINIONS HACKED", str(s.get("hacks", 0))),
-                ("CLEAN HACKS", str(s.get("clean_hacks", 0))),
-                ("DEATHS", str(s.get("deaths", 0))),
-                ("INTEL FRAGMENTS", str(s.get("intel", 0))),
-                ("BITS", str(s.get("bits", 0)))]
-        box = pygame.Rect(w // 2 - 200, 168, 400, 26 + len(rows) * 26)
+        draw_header(surface, "MAINTENANCE LOG", "Kernel needs a name for the duty roster. It will only ask once.")
+        box = pygame.Rect(w // 2 - 260, 112, 520, 132)
         gdev.panel(surface, box, alpha=225, border=gdev.GREEN_DIM)
-        pygame.draw.rect(surface, gdev.GREEN_DARK, (box.x + 1, box.y + 1, box.w - 2, 18))
-        gdev.text(surface, "SESSION LOG", (box.x + 10, box.y + 3), 12, gdev.GREEN, bold=True)
-        for i, (k, v) in enumerate(rows):
-            if self.t < 0.3 + i * 0.12:
-                break
-            y = box.y + 30 + i * 26
-            gdev.text(surface, k, (box.x + 16, y), 16, gdev.GREEN_MID)
-            dots_x = box.x + 16 + gdev.text_size(k, 16)[0] + 8
-            while dots_x < box.right - 90:
-                pygame.draw.rect(surface, gdev.GREEN_DIM, (dots_x, y + 12, 2, 2))
-                dots_x += 6
-            gdev.text(surface, v, (box.right - 16, y), 16, gdev.CYAN if k == "CLEAN HACKS" else gdev.GREEN,
-                      "topright", True)
-        for i, (r, (label, _a)) in enumerate(zip(self.item_rects(), self.items)):
-            if i == self.selected:
-                pygame.draw.rect(surface, gdev.GREEN, r)
-                gdev.text(surface, "> " + label + " <", r.center, 16, gdev.BG, "center", True)
+        gdev.text(surface, typed("> ENTER HANDLE_", self.t, 40), (box.x + 16, box.y + 14), 16, gdev.GREEN, bold=True)
+        field = pygame.Rect(box.x + 16, box.y + 44, box.w - 32, 44)
+        pygame.draw.rect(surface, gdev.BG, field)
+        pygame.draw.rect(surface, gdev.CYAN if self.ok() else gdev.GREEN_MID, field, 1)
+        tr = gdev.text(surface, self.value, (field.x + 14, field.centery), 28, gdev.CYAN, "midleft", True)
+        if int(self.t * 2.5) % 2 == 0:
+            pygame.draw.rect(surface, gdev.CYAN, (tr.right + 4, field.y + 10, 12, field.h - 20))
+        n = len(self.value)
+        col = gdev.GREEN_MID if self.ok() else (gdev.RED if self.error_t > 0 else gdev.AMBER)
+        gdev.text(surface, "%d/%d  ::  letters A-Z, %d to %d long" % (n, HANDLE_MAX, HANDLE_MIN, HANDLE_MAX),
+                  (box.x + 16, box.y + 98), 12, col)
+        gdev.text(surface, "ENTER to confirm", (box.right - 16, box.y + 98), 12,
+                  gdev.CYAN if self.ok() else gdev.GREEN_DIM, "topright")
+        for i, r in enumerate(self.cell_rects()):
+            label = LETTERS[i] if i < 26 else ("DEL" if i == 26 else "OK")
+            focus = i == self.focus
+            enabled = i != 27 or self.ok()
+            if focus:
+                pygame.draw.rect(surface, gdev.GREEN if enabled else gdev.GREEN_DIM, r)
+                gdev.text(surface, label, r.center, 16, gdev.BG, "center", True)
             else:
-                gdev.panel(surface, r, alpha=235, border=gdev.GREEN_DIM)
-                gdev.text(surface, label, r.center, 16, gdev.GREEN_MID, "center")
-        draw_footer(surface, "A/D  SELECT    ENTER  CONFIRM    ESC  MAIN MENU")
+                gdev.panel(surface, r, alpha=225, border=gdev.GREEN_DIM if enabled else (20, 50, 30))
+                gdev.text(surface, label, r.center, 16, gdev.GREEN_MID if enabled else gdev.GREEN_DIM, "center")
+        draw_footer(surface, "TYPE A-Z    BACKSPACE  DELETE    ENTER  CONFIRM    ESC  BACK")
+        self.crt.overlay(surface)
+
+
+# ------------------------------------------------------------------ terminal story scenes
+
+SCENE_COLORS = {"green": gdev.GREEN, "cyan": gdev.CYAN, "magenta": gdev.MAGENTA, "amber": gdev.AMBER,
+                "red": gdev.RED, "white": gdev.WHITE}
+
+
+class TerminalScene(Screen):
+    """A paged terminal story scene over the frozen game frame: Core Dumps, Key 14, Spool's
+    cache, the Deep Core descent. Game calls load(spec, run) and opens it (state SCENE).
+
+    spec = {"kind": "core_dump"|"key14"|"cache"|"descent"|..., "title": str,
+            "pages": [{"head": str, "lines": [str], "color": "green"|"cyan"|"magenta"|"amber"|"red",
+                       "kind": "text"|"stats"|"key"|"exploit"|"patch"|"handle"}],
+            "key_index": int|None (the "key" page animates this name-bar cluster),
+            "on_close": "resume"|"enter_deep_core"}
+    Enter / Space / LMB: finish typing, then next page; the last page returns "scene_done".
+    Esc / RMB: jump to the last page (then close)."""
+    INPUT_DELAY_S = 0.35
+    CPS = 70.0
+
+    def __init__(self, crt):
+        Screen.__init__(self, crt)
+        self.spec = {"title": "", "pages": []}
+        self.run = None
+        self.page = 0
+        self.page_t = 0.0
+
+    def load(self, spec, run):
+        self.spec = spec or {"title": "", "pages": []}
+        if not self.spec.get("pages"):
+            self.spec["pages"] = [{"head": "", "lines": ["..."]}]
+        self.run = run
+        self.page = 0
+        self.page_t = 0.0
+
+    def open(self):
+        Screen.open(self)
+        self.page_t = 0.0
+
+    def _page(self):
+        return self.spec["pages"][self.page]
+
+    def _text_len(self):
+        p = self._page()
+        return len(p.get("head", "")) + sum(len(str(x)) for x in p.get("lines", []))
+
+    def _typing_done(self):
+        return self.page_t * self.CPS >= self._text_len() + 2
+
+    def _next(self):
+        if not self._typing_done():
+            self.page_t = (self._text_len() + 3) / self.CPS
+            return None
+        if self.page + 1 < len(self.spec["pages"]):
+            self.page += 1
+            self.page_t = 0.0
+            return None
+        return "scene_done"
+
+    def handle_event(self, e):
+        if self.t < self.INPUT_DELAY_S and e.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
+            return None
+        if is_key(e, OK_KEYS) or is_click(e):
+            return self._next()
+        if is_key(e, (pygame.K_ESCAPE,)) or is_click(e, 3):
+            if self.page + 1 < len(self.spec["pages"]):
+                self.page = len(self.spec["pages"]) - 1
+                self.page_t = 0.0
+                return None
+            return "scene_done"
+        return None
+
+    def update(self, dt):
+        Screen.update(self, dt)
+        self.page_t += dt
+
+    def draw(self, surface):
+        self.crt.background(surface, self.frozen, 225)
+        w, h = surface.get_size()
+        win = pygame.Rect(w // 2 - 380, 74, 760, 340)
+        gdev.panel(surface, win, alpha=235, border=gdev.CYAN)
+        pygame.draw.rect(surface, gdev.GREEN_DARK, (win.x + 1, win.y + 1, win.w - 2, 22))
+        gdev.text(surface, str(self.spec.get("title", "")), (win.x + 10, win.y + 4), 13, gdev.GREEN, bold=True)
+        n = len(self.spec["pages"])
+        gdev.text(surface, "%d/%d" % (self.page + 1, n), (win.right - 10, win.y + 4), 13, gdev.GREEN_MID,
+                  "topright")
+        p = self._page()
+        col = SCENE_COLORS.get(p.get("color", "green"), gdev.GREEN)
+        budget = int(self.page_t * self.CPS)
+        head = str(p.get("head", ""))
+        y = win.y + 40
+        gdev.text(surface, typed(head, self.page_t, self.CPS), (win.x + 24, y), 20, col, bold=True)
+        budget -= len(head)
+        y += 36
+        kind = p.get("kind", "text")
+        if kind == "key" and self.run is not None:
+            idx = self.spec.get("key_index")
+            anim = {idx: max(0.0, self.page_t - 0.3)} if idx is not None else {}
+            keys = set(self.run.keys)
+            if idx is not None and self.page_t < 0.3:
+                keys.discard(idx)
+            hud.draw_name_bar(surface, self.run, (w // 2, y + 10), 16, keys=keys, key_anim=anim, t=self.t)
+            y += 56
+            if idx is not None:
+                gdev.text(surface, "%s -> %s" % (hud.NAME_CLUSTERS[idx], hud.NAME_PLAIN[idx]), (w // 2, y), 18,
+                          gdev.CYAN, "midtop", True)
+                y += 30
+        elif kind == "handle" and self.run is not None:
+            hud.draw_name_bar(surface, self.run, (w // 2, y + 10), 18, handle=self.run.handle, t=self.t)
+            y += 60
+        elif kind == "patch":
+            card = pygame.Rect(win.x + 24, y - 6, win.w - 48, 22 + 22 * max(1, len(p.get("lines", []))))
+            gdev.panel(surface, card, fill=(30, 6, 26), alpha=220, border=gdev.MAGENTA)
+            y += 4
+        for line in p.get("lines", []):
+            line = str(line)
+            if budget <= 0:
+                break
+            shown = line[:max(0, budget)]
+            budget -= len(line)
+            for sub in gdev.wrap(shown, win.w - 60, 16):
+                gdev.text(surface, sub, (win.x + 30, y), 16, gdev.WHITE if kind == "text" else col)
+                y += 22
+        if self._typing_done() and int(self.t * 2.5) % 2 == 0:
+            gdev.text(surface, "> NEXT" if self.page + 1 < n else "> CLOSE", (win.right - 16, win.bottom - 24), 14,
+                      gdev.CYAN, "topright", True)
+        gdev.draw_scanlines(surface, 26, win)
+        draw_footer(surface, "ENTER / CLICK  NEXT    ESC  SKIP TO END")
+        self.crt.overlay(surface)
+
+
+# ------------------------------------------------------------------ ending + credits
+
+class EndingScreen(Screen):
+    """The ending (doc 8.4) then the credits with real stats. Game calls load(spec, handle, keys).
+    spec = {"ending": "PURGE"|"PATCH", "title", "lines": [str], "last_line": str,
+            "credits": [(label, value)], "stat_line": str}
+    Enter / click: finish typing, then ENDING -> CREDITS -> "ending_done" (main menu)."""
+    INPUT_DELAY_S = 0.6
+    CPS = 45.0
+
+    def __init__(self, crt):
+        Screen.__init__(self, crt)
+        self.spec = {"ending": "PURGE", "title": "", "lines": [], "last_line": "", "credits": [], "stat_line": ""}
+        self.handle = ""
+        self.keys = set()
+        self.page = 0           # 0 ending text, 1 credits
+        self.page_t = 0.0
+
+    def load(self, spec, handle, keys):
+        self.spec = spec
+        self.handle = handle
+        self.keys = set(keys)
+        self.page = 0
+        self.page_t = 0.0
+
+    def _text_len(self):
+        return sum(len(x) for x in self.spec.get("lines", [])) + len(self.spec.get("last_line", ""))
+
+    def handle_event(self, e):
+        if self.t < self.INPUT_DELAY_S and e.type in (pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
+            return None
+        if is_key(e, OK_KEYS + (pygame.K_ESCAPE,)) or is_click(e):
+            if self.page == 0 and self.page_t * self.CPS < self._text_len() + 4:
+                self.page_t = (self._text_len() + 5) / self.CPS
+                return None
+            if self.page == 0:
+                self.page = 1
+                self.page_t = 0.0
+                return None
+            return "ending_done"
+        return None
+
+    def update(self, dt):
+        Screen.update(self, dt)
+        self.page_t += dt
+
+    def draw(self, surface):
+        self.crt.background(surface)
+        w, h = surface.get_size()
+        patch = self.spec.get("ending") == "PATCH"
+        col = gdev.CYAN if patch else gdev.AMBER
+        shade(surface, (0, 30, w, 96), 190)
+        draw_glow_text(surface, "%s" % self.spec.get("title", ""), (w // 2, 62), 36, col,
+                       glow=(20, 90, 110) if patch else (90, 60, 10))
+        gdev.text(surface, "ENDING :: %s" % self.spec.get("ending", ""), (w // 2, 92), 13, gdev.GREEN_MID, "midtop")
+        if self.page == 0:
+            box = pygame.Rect(w // 2 - 360, 140, 720, 250)
+            gdev.panel(surface, box, alpha=225, border=col)
+            budget = int(self.page_t * self.CPS)
+            y = box.y + 24
+            for line in self.spec.get("lines", []):
+                if budget <= 0:
+                    break
+                for sub in gdev.wrap(line[:budget], box.w - 48, 16):
+                    gdev.text(surface, sub, (box.x + 24, y), 16, gdev.WHITE)
+                    y += 24
+                budget -= len(line)
+                y += 6
+            last = self.spec.get("last_line", "")
+            if budget > 0 and last:
+                gdev.text(surface, last[:budget], (w // 2, box.bottom - 40), 22, gdev.MAGENTA, "midtop", True)
+            footer = "ENTER  CREDITS"
+        else:
+            hud.draw_name_bar(surface, None, (w // 2, 116), 16, keys=self.keys, key_anim={}, t=self.t,
+                              handle=self.handle if patch or len(self.keys) >= 14 else None)
+            box = pygame.Rect(w // 2 - 230, 152, 460, 30 + 24 * len(self.spec.get("credits", [])))
+            gdev.panel(surface, box, alpha=225, border=gdev.GREEN_DIM)
+            pygame.draw.rect(surface, gdev.GREEN_DARK, (box.x + 1, box.y + 1, box.w - 2, 18))
+            gdev.text(surface, "CREDITS :: YOUR THREAT MODEL", (box.x + 10, box.y + 3), 12, gdev.GREEN, bold=True)
+            for i, (k, v) in enumerate(self.spec.get("credits", [])):
+                if self.page_t < 0.2 + i * 0.12:
+                    break
+                y = box.y + 28 + i * 24
+                gdev.text(surface, k, (box.x + 16, y), 16, gdev.GREEN_MID)
+                gdev.text(surface, str(v), (box.right - 16, y), 16, gdev.CYAN, "topright", True)
+            gdev.text(surface, self.spec.get("stat_line", ""), (w // 2, box.bottom + 14), 13, gdev.MAGENTA, "midtop")
+            footer = "ENTER  MAIN MENU"
+        draw_footer(surface, footer)
         self.crt.overlay(surface)

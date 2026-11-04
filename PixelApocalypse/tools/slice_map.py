@@ -23,6 +23,11 @@ How it works:
   5. Spawn exits, zones, player start, then sanity checks.
 
 The output is a draft: a human may hand-correct data/map_data.json.
+
+Hand-authored keys (HAND_KEYS: act barriers, blast doors, interactables, regions,
+cable trunks and the Deep Core arena) are not in the image. They are read from the
+existing output file and written back unchanged, so re-running the slicer never
+drops them.
 """
 
 import os
@@ -46,6 +51,11 @@ OUT_PATH = "data/map_data.json"
 ZONE_RADIUS = 1200
 SPAWN_MARGIN = 24      # how far outside the shell edge a spawn exit sits
 CLEAR_BOX = 32         # spawn exits / player start need this much free floor
+
+# Kept from the existing map_data.json when the file is rewritten (hand-authored).
+HAND_KEYS = ("barriers", "doors", "interactables", "regions", "trunks", "deep_core")
+HAND_NOTE = ("barriers, doors, interactables, regions, trunks and deep_core are "
+             "hand-authored; tools/slice_map.py keeps them when it rewrites this file")
 
 # Design doc 3.1 (approximate rects, x0, x1, y0, y1). Used only for naming.
 DOC_RACKS = {
@@ -382,6 +392,46 @@ def validate(data):
     assert is_clear(box, solids, art), "player_start is inside a solid"
 
 
+def keep_hand_authored(data, old_file):
+    """Copy the HAND_KEYS section of the old output file (if any) into the new data."""
+    try:
+        with open(old_file) as f:
+            old = json.load(f)
+    except (IOError, OSError, ValueError):
+        return []
+    kept = [k for k in HAND_KEYS if k in old]
+    if kept:
+        data["hand_authored"] = old.get("hand_authored", HAND_NOTE)
+        for k in kept:
+            data[k] = old[k]
+    return kept
+
+
+def validate_hand(data):
+    """The kept hand-authored gates must still fit the extracted map: barriers and doors
+    overlap no other solid, and no spawn exit or interactable ends up inside one."""
+    art = pygame.Rect(data["art_bounds"])
+    base = [pygame.Rect(wl["rect"]) for wl in data["walls"]] + \
+           [pygame.Rect(r["shell"]) for r in data["racks"]] + \
+           [pygame.Rect(n["rect"]) for n in data["nodes"]] + \
+           [pygame.Rect(b["rect"]) for b in data["blocks"]]
+    gates = [pygame.Rect(b["rect"]) for b in data.get("barriers", [])] + \
+            [pygame.Rect(d["rect"]) for d in data.get("doors", [])]
+    for g in gates:
+        assert art.contains(g), "barrier/door %s outside art" % g
+        for s in base:
+            assert not g.colliderect(s), "barrier/door %s overlaps %s" % (g, s)
+    for rack in data["racks"]:
+        for bar in rack["bars"]:
+            box = pygame.Rect(0, 0, CLEAR_BOX, CLEAR_BOX)
+            box.center = bar["spawn_exit"]
+            assert box.collidelist(gates) < 0, "spawn exit %s cut by a barrier" % bar["spawn_exit"]
+    for it in data.get("interactables", []):
+        box = pygame.Rect(0, 0, 16, 16)
+        box.center = it["pos"]
+        assert is_clear(box, base + gates, art), "interactable %s is not on free floor" % it["id"]
+
+
 def compact_json(data):
     """indent=2, but short number lists stay on one line (easier to hand-edit)."""
     text = json.dumps(data, indent=2)
@@ -453,6 +503,9 @@ def main():
     data = slice_map(img)
     validate(data)
 
+    kept = keep_hand_authored(data, args.out)
+    validate_hand(data)
+
     folder = os.path.dirname(os.path.abspath(args.out))
     if not os.path.isdir(folder):
         os.makedirs(folder)
@@ -472,6 +525,7 @@ def main():
     print("player_start:", data["player_start"])
     for n in data["notes"]:
         print("NOTE:", n)
+    print("kept hand-authored:", ", ".join(kept) if kept else "(none)")
     print("wrote", args.out)
 
     if args.overlay:

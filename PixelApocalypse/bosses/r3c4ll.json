@@ -1,0 +1,77 @@
+{
+  "id": "r3c4ll",
+  "slot": 1,
+  "rack_id": "A",
+  "leet_name": "R3C4LL",
+  "plain_name": "RECALL",
+  "submodel": "MEMORY",
+  "act": 1,
+  "firewall_points": 3,
+  "core_bars": [
+    0,
+    1,
+    2
+  ],
+  "core_hp": 12,
+  "spawn_table": {
+    "B1T": 0.7,
+    "P1NG": 0.3
+  },
+  "spawn_pattern": "vent_burst",
+  "max_alive": 6,
+  "modifiers": [
+    {
+      "id": "respawn_from_cache",
+      "respawn_delay_s": 3.0,
+      "originals_per_wave": 1,
+      "stale_packets": true
+    }
+  ],
+  "script": null,
+  "phases": [
+    {
+      "core": 0,
+      "attacks": [
+        "radial_burst"
+      ],
+      "spawn_rate": 1.0
+    },
+    {
+      "core": 1,
+      "attacks": [
+        "radial_burst",
+        "port_beam"
+      ],
+      "spawn_rate": 1.12
+    },
+    {
+      "core": 2,
+      "attacks": [
+        "port_beam",
+        "port_overload"
+      ],
+      "spawn_rate": 1.24
+    }
+  ],
+  "exposure_window_s": 18,
+  "adaptation_pool": [
+    "BIT_SPEED",
+    "LEAD_SHOTS",
+    "FAST_KITE",
+    "TIER2_SHARE"
+  ],
+  "password_word": "YESTERDAY",
+  "password_chunks": [
+    "YES",
+    "TER",
+    "DAY"
+  ],
+  "password_intel_id": "A-07",
+  "core_dump": {
+    "text_id": "dump_A",
+    "key_glyph_index": 1,
+    "exploit": "LEXICON",
+    "stat": "heatmap"
+  },
+  "fight_trigger_px": 380
+}

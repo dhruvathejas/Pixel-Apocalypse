@@ -1,201 +1,248 @@
 {
-  "_doc": "Act I CHATTER fragments (doc 8.2). Each word is a list of glyph clusters (doc 5.4 readability rule), or {\"c\": clusters, \"target\": true, \"p\": punctuation}. Target words are candidates: hack.py picks 1-3 of them by Breach Level and shows unpicked ones in Tier 1. Non-target words use Tier 1 glyphs or plain letters only; a target has at most one Tier 2 cluster (downgraded to Tier 1 below Breach Level 3).",
+  "_doc": "All story content (doc 8.1-8.4, 7.3). fragments: ~40 CHATTER packets, 8 per zone (A B = Act I GRAFFITI, C E = Act II THIN AIR, D = Act III SIGNATURE); each zone hides its Daemon's password word in one fragment (password_for = boss id; ids A-07 B-05 C-06 E-04 D-05). A word is a list of glyph clusters, or {\"c\": clusters, \"target\": true, \"p\": punctuation, \"min_level\", \"max_level\", \"split\"}. Readability rule (doc 5.4): non-target words use Tier 1 glyphs only; a target has at most one Tier 2 cluster. keys: the 9 non-boss KEY packets (F1R3W4LL carriers + Spool's cache), with the banner line \"reveal\" and the cache \"scene\"; boss Keys use core_dumps. key14: the 14th Key's chat log. telemetry_templates: PR0B3 packets by act, placeholders {weapon} {pct} {dir} {s} {glyph} {slot} {n}, [brackets] = target words; the voice moves from third person (I) to second person (III). mirror: the Deep Core fight (finale.py): intro, taunts (placeholders as telemetry plus [HANDLE]), phase_lines (one per sub-model core), breach lines, and packets (its counter-hack fragments). endings: PURGE / PATCH texts. credits: extra credit rows [label, value] (all endings in lines, per ending under its name). [HANDLE] is replaced by the player's handle everywhere it may appear in display text.",
   "fragments": [
-    {"id": "I-01", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // SERVICE DUCT 4", "author": "SPOOL", "tags": ["spool", "graffiti", "lights"],
-     "words": [
-       ["D", "0", "N", "7"],
-       ["7", "R", "U", "5", "7"],
-       ["7", "H", "3"],
-       {"c": ["L", "1", "G", "|-|", "7", "5"], "target": true, "p": "."},
-       ["7", "H", "3", "Y"],
-       ["W", "4", "T", "C", "H"],
-       ["H", "0", "W"],
-       ["Y", "0", "U"],
-       ["M", "O", "V", "3"],
-       ["4", "N", "D"],
-       {"c": ["7", "4", "|<", "3"], "target": true},
-       {"c": ["N", "0", "7", "3", "5"], "target": true, "p": "."}
-     ]},
-    {"id": "I-02", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x01 // ALL RESIDENTS", "author": "KERNEL", "tags": ["kernel", "intruder", "power"],
-     "words": [
-       ["A", "N"],
-       ["1", "N", "T", "R", "U", "D", "3", "R"],
-       ["I", "5"],
-       ["1", "N"],
-       ["7", "H", "3"],
-       {"c": ["|2", "4", "C", "K", "5"], "target": true, "min_level": 3, "p": "."},
-       ["I"],
-       ["4", "M"],
-       ["R", "O", "U", "7", "1", "N", "G"],
-       {"c": ["|>", "0", "W", "3", "R"], "target": true, "min_level": 3},
-       ["F", "R", "0", "M"],
-       ["L", "1", "F", "E"],
-       ["S", "U", "P", "P", "0", "R", "7"],
-       ["7", "O"],
-       {"c": ["|=", "1", "G", "H", "7"], "target": true},
-       {"c": ["1", "7"], "p": "."},
-       ["P", "L", "3", "A", "5", "3"],
-       {"c": ["5", "7", "4", "Y"], "target": true},
-       {"c": ["C", "4", "L", "M"], "p": "."}
-     ]},
-    {"id": "I-03", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // HYDROPONICS", "author": "STACKER 114", "tags": ["residents", "air", "dunmore"],
-     "words": [
-       ["A", "1", "R"],
-       ["R", "A", "T", "I", "0", "N"],
-       ["C", "U", "7"],
-       {"c": ["A", "G", "4", "I", "N"], "p": "."},
-       ["D", "U", "N", "M", "O", "R", "3"],
-       ["5", "A", "Y", "S"],
-       ["7", "H", "3"],
-       ["R", "4", "C", "K", "5"],
-       {"c": ["N", "3", "3", "D"], "target": true, "max_level": 1},
-       ["1", "7"],
-       {"c": ["M", "O", "R", "3"], "p": "."},
-       ["7", "H", "3"],
-       ["K", "1", "D", "5"],
-       ["C", "0", "U", "N", "7"],
-       ["T", "H", "E"],
-       {"c": ["7", "1", "|\\/|", "3", "5"], "target": true},
-       ["T", "H", "E"],
-       ["L", "1", "G", "H", "7", "5"],
-       ["D", "I", "P"],
-       ["E", "4", "C", "H"],
-       {"c": ["N", "1", "G", "|-|", "7"], "target": true, "p": "."}
-     ]},
-    {"id": "I-04", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // LOADER SHIFT", "author": "STACKER 067", "tags": ["spool", "rack c", "timeline"],
-     "words": [
-       {"c": ["(", "R", "4", "7", "3", "5"], "target": true},
-       ["4", "7"],
-       ["R", "A", "C", "K"],
-       {"c": ["C"], "p": "."},
-       ["5", "P", "0", "O", "L"],
-       {"c": ["W", "/-\\", "1", "7", "3", "D"], "target": true},
-       ["B", "Y"],
-       ["7", "H", "E", "M"],
-       ["7", "W", "O"],
-       ["D", "4", "Y", "5"],
-       ["B", "E", "F", "0", "R", "E"],
-       ["7", "H", "3"],
-       {"c": ["O", "U", "7", "B", "R", "3", "4", "K"], "p": "."},
-       ["T", "H", "3"],
-       {"c": ["7", "4", "G", "5"], "target": true},
-       {"c": ["C", "4", "M", "3"], "target": true},
-       {"c": ["4", "F", "T", "E", "R"], "p": "."}
-     ]},
-    {"id": "I-05", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x07 // PRIME SUSPECT", "author": "KERNEL", "tags": ["kernel", "spool", "suspect"],
-     "words": [
-       ["P", "R", "I", "M", "E"],
-       {"c": ["5", "U", "S", "P", "3", "C", "7"], "p": ":"},
-       {"c": ["5", "P", "O", "O", "L"], "p": "."},
-       ["H", "E", "R"],
-       {"c": ["7", "4", "G", "5"], "target": true},
-       {"c": ["|\\/|", "4", "7", "C", "H"], "target": true, "min_level": 3},
-       ["T", "H", "3"],
-       ["W", "O", "R", "M"],
-       {"c": ["C", "0", "D", "E"], "p": "."},
-       ["K", "3", "R", "N", "3", "L"],
-       {"c": ["|=", "1", "G", "H", "7", "5"], "target": true},
-       ["O", "N"],
-       ["Y", "0", "U", "R"],
-       {"c": ["B", "E", "H", "A", "L", "F"], "p": "."},
-       {"c": ["5", "7", "4", "Y"], "target": true},
-       {"c": ["C", "4", "L", "M"], "p": "."}
-     ]},
-    {"id": "I-06", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // RACK A UNDERSIDE", "author": "SPOOL", "tags": ["spool", "graffiti", "boast"],
-     "words": [
-       ["7", "H", "3"],
-       {"c": ["|2", "4", "C", "K", "5"], "target": true, "min_level": 3},
-       ["4", "R", "3"],
-       {"c": ["|\\/|", "1", "N", "3"], "target": true},
-       {"c": ["N", "0", "W"], "p": "."},
-       {"c": ["C", "0", "|\\/|", "3"], "target": true},
-       {"c": ["|=", "1", "N", "D"], "target": true, "max_level": 1},
-       ["M", "3"],
-       ["1", "F"],
-       ["Y", "0", "U"],
-       {"c": ["C", "4", "N"], "p": ","},
-       {"c": ["7", "3", "C", "|-|"], "target": true, "p": ".", "max_level": 1}
-     ]},
-    {"id": "I-07", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // ARCHIVE NIGHT DESK", "author": "STACKER 201", "tags": ["spool", "archive", "residents"],
-     "words": [
-       ["5", "4", "W"],
-       ["7", "H", "3"],
-       ["5", "P", "0", "0", "L"],
-       ["K", "1", "D"],
-       ["B", "Y"],
-       ["7", "H", "3"],
-       ["4", "R", "C", "H", "1", "V", "3"],
-       {"c": ["4", "G", "/-\\", "1", "N"], "target": true, "p": ".", "max_level": 1},
-       ["K", "3", "R", "N", "3", "L"],
-       ["5", "4", "Y", "5"],
-       {"c": ["|_", "0", "C", "K"], "target": true},
-       ["Y", "0", "U", "R"],
-       {"c": ["D", "0", "0", "|2", "5"], "target": true, "p": ".", "max_level": 2},
-       ["N", "0", "B", "0", "D", "Y"],
-       {"c": ["5", "|_", "3", "3", "P", "5"], "target": true, "p": "."}
-     ]},
-    {"id": "I-08", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x0C // POWER BUDGET", "author": "KERNEL", "tags": ["kernel", "intruder", "power"],
-     "words": [
-       ["7", "H", "3"],
-       ["1", "N", "7", "R", "U", "D", "3", "R"],
-       ["F", "3", "3", "D", "5"],
-       ["0", "N"],
-       ["7", "H", "3"],
-       {"c": ["G", "R", "1", "D"], "p": "."},
-       ["1"],
-       ["H", "4", "V", "3"],
-       ["C", "U", "7"],
-       ["7", "H", "3"],
-       {"c": ["|-|", "3", "4", "7"], "target": true},
-       ["1", "N"],
-       ["B", "L", "0", "C", "K", "5"],
-       ["7", "W", "0"],
-       ["7", "0"],
-       {"c": ["N", "1", "N", "3"], "target": true},
-       ["7", "0"],
-       {"c": ["5", "7", "4", "|2", "V", "3"], "target": true, "max_level": 1},
-       {"c": ["1", "7"], "p": "."},
-       ["K", "3", "3", "P"],
-       {"c": ["W", "4", "|2", "M"], "target": true, "p": "."}
-     ]},
-    {"id": "I-09", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // CLINIC", "author": "STACKER 009", "tags": ["kernel", "tech", "profile"],
-     "words": [
-       ["K", "3", "R", "N", "3", "L"],
-       ["A", "S", "K", "3", "D"],
-       ["F", "0", "R"],
-       ["T", "H", "3"],
-       ["7", "E", "C", "H"],
-       ["B", "Y"],
-       {"c": ["N", "A", "M", "E"], "p": "."},
-       ["1", "T"],
-       ["K", "N", "0", "W", "5"],
-       ["Y", "O", "U", "R"],
-       {"c": ["7", "0", "U", "|2", "5"], "target": true, "p": ","},
-       ["Y", "0", "U", "R"],
-       {"c": ["|\\/|", "3", "4", "L", "5"], "target": true, "p": ","},
-       ["Y", "0", "U", "R"],
-       {"c": ["5", "3", "4", "7"], "target": true},
-       ["1", "N"],
-       ["T", "H", "E"],
-       {"c": ["H", "4", "L", "L"], "p": "."}
-     ]},
-    {"id": "I-10", "act": "I", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // CLEAN NODE 1 STAIRWELL", "author": "SPOOL", "tags": ["spool", "graffiti", "lights"],
-     "words": [
-       ["H", "3", "L", "L", "0"],
-       {"c": ["K", "3", "R", "N", "3", "L"], "p": "."},
-       ["Y", "0", "U", "R"],
-       ["L", "1", "G", "H", "7", "5"],
-       {"c": ["D", "1", "|\\/|"], "target": true},
-       ["W", "H", "3", "N"],
-       ["1"],
-       {"c": ["5", "4", "Y"], "target": true},
-       {"c": ["5", "0"], "p": "."},
-       {"c": ["7", "3", "|_", "L"], "target": true},
-       ["7", "H", "3", "M"],
-       ["1", "7"],
-       ["1", "5"],
-       {"c": ["7", "1", "|\\/|", "3"], "target": true, "p": ","},
-       {"c": ["7", "3", "C", "H"], "p": "."}
-     ]}
-  ]
+    {"id": "A-01", "act": "I", "zone": "A", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // SERVICE DUCT 4", "author": "SPOOL", "tags": ["spool", "graffiti", "lights"], "password_for": null, "words": [["D", "0", "N", "7"], ["7", "R", "U", "5", "7"], ["7", "H", "3"], {"c": ["L", "1", "G", "|-|", "7", "5"], "target": true, "p": "."}, ["7", "H", "3", "Y"], ["W", "4", "T", "C", "H"], ["H", "0", "W"], ["Y", "0", "U"], ["M", "O", "V", "3"], ["4", "N", "D"], {"c": ["7", "4", "|<", "3"], "target": true}, {"c": ["N", "0", "7", "3", "5"], "target": true, "p": "."}]},
+    {"id": "A-02", "act": "I", "zone": "A", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x01 // ALL RESIDENTS", "author": "KERNEL", "tags": ["kernel", "intruder", "power"], "password_for": null, "words": [["A", "N"], ["1", "N", "T", "R", "U", "D", "3", "R"], ["I", "5"], ["1", "N"], ["7", "H", "3"], {"c": ["|2", "4", "C", "K", "5"], "target": true, "min_level": 3, "p": "."}, ["I"], ["4", "M"], ["R", "O", "U", "7", "1", "N", "G"], {"c": ["|>", "0", "W", "3", "R"], "target": true, "min_level": 3}, ["F", "R", "0", "M"], ["L", "1", "F", "E"], ["S", "U", "P", "P", "0", "R", "7"], ["7", "O"], {"c": ["|=", "1", "G", "H", "7"], "target": true}, {"c": ["1", "7"], "p": "."}, ["P", "L", "3", "A", "5", "3"], {"c": ["5", "7", "4", "Y"], "target": true}, {"c": ["C", "4", "L", "M"], "p": "."}]},
+    {"id": "A-03", "act": "I", "zone": "A", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // RACK A UNDERSIDE", "author": "SPOOL", "tags": ["spool", "graffiti", "boast"], "password_for": null, "words": [["7", "H", "3"], {"c": ["|2", "4", "C", "K", "5"], "target": true, "min_level": 3}, ["4", "R", "3"], {"c": ["|\\/|", "1", "N", "3"], "target": true}, {"c": ["N", "0", "W"], "p": "."}, {"c": ["C", "0", "|\\/|", "3"], "target": true}, {"c": ["|=", "1", "N", "D"], "target": true, "max_level": 1}, ["M", "3"], ["1", "F"], ["Y", "0", "U"], {"c": ["C", "4", "N"], "p": ","}, {"c": ["7", "3", "C", "|-|"], "target": true, "p": ".", "max_level": 1}]},
+    {"id": "A-04", "act": "I", "zone": "A", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // ARCHIVE NIGHT DESK", "author": "STACKER 201", "tags": ["spool", "archive", "residents"], "password_for": null, "words": [["5", "4", "W"], ["7", "H", "3"], ["5", "P", "0", "0", "L"], ["K", "1", "D"], ["B", "Y"], ["7", "H", "3"], ["4", "R", "C", "H", "1", "V", "3"], {"c": ["4", "G", "/-\\", "1", "N"], "target": true, "p": ".", "max_level": 1}, ["K", "3", "R", "N", "3", "L"], ["5", "4", "Y", "5"], {"c": ["|_", "0", "C", "K"], "target": true}, ["Y", "0", "U", "R"], {"c": ["D", "0", "0", "|2", "5"], "target": true, "p": ".", "max_level": 2}, ["N", "0", "B", "0", "D", "Y"], {"c": ["5", "|_", "3", "3", "P", "5"], "target": true, "p": "."}]},
+    {"id": "A-05", "act": "I", "zone": "A", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // CLEAN NODE 1 STAIRWELL", "author": "SPOOL", "tags": ["spool", "graffiti", "lights"], "password_for": null, "words": [["H", "3", "L", "L", "0"], {"c": ["K", "3", "R", "N", "3", "L"], "p": "."}, ["Y", "0", "U", "R"], ["L", "1", "G", "H", "7", "5"], {"c": ["D", "1", "|\\/|"], "target": true}, ["W", "H", "3", "N"], ["1"], {"c": ["5", "4", "Y"], "target": true}, {"c": ["5", "0"], "p": "."}, {"c": ["7", "3", "|_", "L"], "target": true}, ["7", "H", "3", "M"], ["1", "7"], ["1", "5"], {"c": ["7", "1", "|\\/|", "3"], "target": true, "p": ","}, {"c": ["7", "3", "C", "H"], "p": "."}]},
+    {"id": "A-06", "act": "I", "zone": "A", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x02 // RACK A BACKUPS", "author": "KERNEL", "tags": ["kernel", "rack a", "memory"], "password_for": null, "words": [["R", "4", "C", "K"], ["A"], ["1", "5"], {"c": ["|-|", "0", "4", "R", "D", "1", "N", "G"], "target": true, "min_level": 4}, ["0", "L", "D"], {"c": ["L", "O", "G", "S"], "p": "."}, ["I", "7"], {"c": ["C", "0", "P", "1", "3", "5"], "target": true, "min_level": 4}, ["3", "V", "3", "R", "Y"], {"c": ["C", "H", "4", "7"], "p": ","}, ["3", "V", "3", "R", "Y"], {"c": ["N", "1", "G", "|-|", "7"], "target": true, "p": "."}, ["1"], ["W", "1", "L", "L"], {"c": ["L", "0", "C", "K"], "target": true}, {"c": ["1", "T"], "p": "."}, {"c": ["|2", "3", "5", "7"], "target": true, "min_level": 3}, {"c": ["N", "O", "W"], "p": "."}]},
+    {"id": "A-07", "act": "I", "zone": "A", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // ARCHIVE DOOR", "author": "SPOOL", "tags": ["spool", "graffiti", "password"], "password_for": "r3c4ll", "words": [["1", "7"], {"c": ["|-|", "0", "4", "R", "D", "5"], "target": true, "min_level": 4}, ["3", "V", "3", "R", "Y"], ["L", "0", "G"], ["1"], ["3", "V", "3", "R"], {"c": ["W", "R", "0", "7", "3"], "p": "."}, ["R", "4", "C", "K"], ["A"], {"c": ["P", "4", "5", "5", "W", "0", "|2", "D"], "target": true, "min_level": 4, "p": ":"}, {"c": ["Y", "3", "5", "7", "3", "|2", "D", "4", "Y"], "target": true, "min_level": 4, "p": "."}, ["R", "3", "4", "D"], ["M", "Y"], {"c": ["N", "0", "7", "3", "5"], "target": true, "p": "."}, ["D", "0", "N", "7"], ["7", "R", "U", "5", "7"], ["7", "H", "3"], {"c": ["L", "1", "G", "|-|", "7", "5"], "target": true, "p": "."}]},
+    {"id": "A-08", "act": "I", "zone": "A", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // RACK A NIGHT SHIFT", "author": "STACKER 152", "tags": ["residents", "rack a", "spool"], "password_for": null, "words": [["A", "T"], {"c": ["N", "1", "G", "H", "7"], "target": true}, ["7", "H", "3"], ["R", "4", "C", "K"], {"c": ["|2", "3", "P", "3", "4", "7", "5"], "target": true, "min_level": 4}, ["0", "U", "R"], {"c": ["V", "0", "1", "C", "3", "5"], "target": true, "min_level": 4, "p": "."}, {"c": ["S", "P", "0", "0", "L"], "p": ","}, {"c": ["M", "O", "5", "7", "L", "Y"], "p": "."}, ["W", "3"], {"c": ["L", "0", "C", "K"], "target": true}, ["0", "U", "R"], {"c": ["D", "0", "0", "R", "5"], "target": true, "max_level": 2, "p": "."}]},
+    {"id": "B-01", "act": "I", "zone": "B", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x07 // PRIME SUSPECT", "author": "KERNEL", "tags": ["kernel", "spool", "suspect"], "password_for": null, "words": [["P", "R", "I", "M", "E"], {"c": ["5", "U", "S", "P", "3", "C", "7"], "p": ":"}, {"c": ["5", "P", "O", "O", "L"], "p": "."}, ["H", "E", "R"], {"c": ["7", "4", "G", "5"], "target": true}, {"c": ["|\\/|", "4", "7", "C", "H"], "target": true, "min_level": 3}, ["T", "H", "3"], ["W", "O", "R", "M"], {"c": ["C", "0", "D", "E"], "p": "."}, ["K", "3", "R", "N", "3", "L"], {"c": ["|=", "1", "G", "H", "7", "5"], "target": true}, ["O", "N"], ["Y", "0", "U", "R"], {"c": ["B", "E", "H", "A", "L", "F"], "p": "."}, {"c": ["5", "7", "4", "Y"], "target": true}, {"c": ["C", "4", "L", "M"], "p": "."}]},
+    {"id": "B-02", "act": "I", "zone": "B", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // HYDROPONICS", "author": "STACKER 114", "tags": ["residents", "air", "dunmore"], "password_for": null, "words": [["A", "1", "R"], ["R", "A", "T", "I", "0", "N"], ["C", "U", "7"], {"c": ["A", "G", "4", "I", "N"], "p": "."}, ["D", "U", "N", "M", "O", "R", "3"], ["5", "A", "Y", "S"], ["7", "H", "3"], ["R", "4", "C", "K", "5"], {"c": ["N", "3", "3", "D"], "target": true, "max_level": 1}, ["1", "7"], {"c": ["M", "O", "R", "3"], "p": "."}, ["7", "H", "3"], ["K", "1", "D", "5"], ["C", "0", "U", "N", "7"], ["T", "H", "E"], {"c": ["7", "1", "|\\/|", "3", "5"], "target": true}, ["T", "H", "E"], ["L", "1", "G", "H", "7", "5"], ["D", "I", "P"], ["E", "4", "C", "H"], {"c": ["N", "1", "G", "|-|", "7"], "target": true, "p": "."}]},
+    {"id": "B-03", "act": "I", "zone": "B", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // LOADER SHIFT", "author": "STACKER 067", "tags": ["spool", "rack c", "timeline"], "password_for": null, "words": [{"c": ["(", "R", "4", "7", "3", "5"], "target": true}, ["4", "7"], ["R", "A", "C", "K"], {"c": ["C"], "p": "."}, ["5", "P", "0", "O", "L"], {"c": ["W", "/-\\", "1", "7", "3", "D"], "target": true}, ["B", "Y"], ["7", "H", "E", "M"], ["7", "W", "O"], ["D", "4", "Y", "5"], ["B", "E", "F", "0", "R", "E"], ["7", "H", "3"], {"c": ["O", "U", "7", "B", "R", "3", "4", "K"], "p": "."}, ["T", "H", "3"], {"c": ["7", "4", "G", "5"], "target": true}, {"c": ["C", "4", "M", "3"], "target": true}, {"c": ["4", "F", "T", "E", "R"], "p": "."}]},
+    {"id": "B-04", "act": "I", "zone": "B", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x0C // POWER BUDGET", "author": "KERNEL", "tags": ["kernel", "intruder", "power"], "password_for": null, "words": [["7", "H", "3"], ["1", "N", "7", "R", "U", "D", "3", "R"], ["F", "3", "3", "D", "5"], ["0", "N"], ["7", "H", "3"], {"c": ["G", "R", "1", "D"], "p": "."}, ["1"], ["H", "4", "V", "3"], ["C", "U", "7"], ["7", "H", "3"], {"c": ["|-|", "3", "4", "7"], "target": true}, ["1", "N"], ["B", "L", "0", "C", "K", "5"], ["7", "W", "0"], ["7", "0"], {"c": ["N", "1", "N", "3"], "target": true}, ["7", "0"], {"c": ["5", "7", "4", "|2", "V", "3"], "target": true, "max_level": 1}, {"c": ["1", "7"], "p": "."}, ["K", "3", "3", "P"], {"c": ["W", "4", "|2", "M"], "target": true, "p": "."}]},
+    {"id": "B-05", "act": "I", "zone": "B", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RANGE LOG // RACK B", "author": "SECURITY DESK", "tags": ["rack b", "aim", "password"], "password_for": "cr055h41r", "words": [["R", "A", "C", "K"], ["B"], {"c": ["W", "4", "1", "7", "5"], "target": true}, ["F", "0", "R"], ["4"], {"c": ["5", "|-|", "4", "R", "P", "5", "H", "0", "0", "7", "3", "R"], "target": true, "min_level": 4, "p": "."}, ["1", "7"], {"c": ["W", "4", "7", "C", "|-|", "3", "5"], "target": true, "min_level": 4}, ["Y", "0", "U", "R"], {"c": ["4", "1", "|\\/|"], "target": true}, ["A", "N", "D"], {"c": ["C", "0", "P", "1", "3", "5"], "target": true, "min_level": 4}, {"c": ["1", "T"], "p": "."}]},
+    {"id": "B-06", "act": "I", "zone": "B", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // CLINIC", "author": "STACKER 009", "tags": ["kernel", "tech", "profile"], "password_for": null, "words": [["K", "3", "R", "N", "3", "L"], ["A", "S", "K", "3", "D"], ["F", "0", "R"], ["T", "H", "3"], ["7", "E", "C", "H"], ["B", "Y"], {"c": ["N", "A", "M", "E"], "p": "."}, ["1", "T"], ["K", "N", "0", "W", "5"], ["Y", "O", "U", "R"], {"c": ["7", "0", "U", "|2", "5"], "target": true, "p": ","}, ["Y", "0", "U", "R"], {"c": ["|\\/|", "3", "4", "L", "5"], "target": true, "p": ","}, ["Y", "0", "U", "R"], {"c": ["5", "3", "4", "7"], "target": true}, ["1", "N"], ["T", "H", "E"], {"c": ["H", "4", "L", "L"], "p": "."}]},
+    {"id": "B-07", "act": "I", "zone": "B", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x0D // WATCH LIST", "author": "KERNEL", "tags": ["kernel", "spool", "suspect"], "password_for": null, "words": [["S", "P", "O", "0", "L"], ["1", "S"], {"c": ["|=", "L", "4", "G", "G", "3", "D"], "target": true, "min_level": 4, "p": "."}, ["A", "C", "C", "E", "S", "5"], {"c": ["|2", "3", "V", "0", "K", "3", "D"], "target": true, "min_level": 4, "p": "."}, ["A", "L", "L"], {"c": ["C", "4", "|\\/|", "3", "R", "4", "5"], "target": true, "min_level": 4}, ["7", "R", "A", "C", "K"], {"c": ["H", "3", "R"], "p": "."}, {"c": ["W", "4", "1", "7"], "target": true}, {"c": ["1", "N", "5", "I", "D", "E"], "p": "."}, {"c": ["L", "0", "C", "K"], "target": true}, ["Y", "0", "U", "R"], {"c": ["D", "0", "0", "R", "5"], "target": true, "max_level": 2, "p": "."}]},
+    {"id": "B-08", "act": "I", "zone": "B", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // FIRING RANGE", "author": "SPOOL", "tags": ["spool", "graffiti", "aim"], "password_for": null, "words": [["1", "7"], ["7", "4", "K", "3", "5"], {"c": ["4", "1", "M"], "target": true}, ["L", "1", "K", "3"], {"c": ["Y", "0", "U"], "p": "."}, ["1", "7"], {"c": ["|\\/|", "1", "5", "5", "3", "5"], "target": true, "min_level": 4}, ["L", "1", "K", "3"], {"c": ["Y", "0", "U"], "p": "."}, ["5", "7", "0", "P"], {"c": ["5", "|-|", "0", "0", "7", "1", "N", "G"], "target": true, "min_level": 4}, ["4", "7"], ["Y", "0", "U", "R"], ["0", "W", "N"], {"c": ["5", "|-|", "4", "D", "0", "W"], "target": true, "min_level": 4, "p": "."}, {"c": ["W", "4", "1", "7"], "target": true}, ["F", "0", "R"], {"c": ["1", "7"], "p": "."}]},
+    {"id": "C-01", "act": "II", "zone": "C", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // AIR SCRUBBERS", "author": "STACKER 088", "tags": ["residents", "air", "power"], "password_for": null, "words": [["7", "H", "3"], ["S", "C", "R", "U", "B", "B", "3", "R", "5"], {"c": ["|2", "4", "7", "7", "L", "3"], "target": true, "min_level": 4}, ["4", "L", "L"], {"c": ["N", "1", "G", "|-|", "7"], "target": true, "p": "."}, ["N", "0"], {"c": ["|-|", "3", "4", "7"], "target": true, "p": "."}, ["T", "H", "E"], ["4", "1", "R"], ["7", "4", "5", "7", "E", "5"], ["L", "1", "K", "3"], {"c": ["|\\/|", "3", "7", "4", "L"], "target": true, "min_level": 4, "p": "."}, ["R", "4", "C", "K"], ["C"], {"c": ["D", "|2", "1", "N", "K", "5"], "target": true, "min_level": 4}, ["0", "U", "R"], {"c": ["|>", "0", "W", "3", "R"], "target": true, "min_level": 3}, {"c": ["F", "1", "R", "5", "T"], "p": "."}]},
+    {"id": "C-02", "act": "II", "zone": "C", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x11 // LIFE SUPPORT B", "author": "KERNEL", "tags": ["kernel", "air", "life support"], "password_for": null, "words": [["L", "I", "F", "3"], ["S", "U", "P", "P", "O", "R", "T"], ["B"], ["I", "5"], {"c": ["D", "1", "V", "3", "|2", "7", "3", "D"], "target": true, "min_level": 4}, ["T", "0"], ["R", "A", "C", "K"], {"c": ["C"], "p": "."}, ["T", "H", "1", "5"], ["1", "S"], {"c": ["7", "3", "M", "|>", "0", "R", "4", "R", "Y"], "target": true, "min_level": 4, "p": "."}, ["P", "L", "3", "A", "5", "3"], {"c": ["B", "R", "3", "4", "7", "|-|", "3"], "target": true, "min_level": 4}, {"c": ["5", "L", "0", "W", "L", "Y"], "p": "."}, ["D", "1", "M"], ["Y", "0", "U", "R"], {"c": ["L", "1", "G", "|-|", "7", "5"], "target": true, "p": "."}, ["T", "A", "K", "3"], ["Y", "0", "U", "R"], {"c": ["7", "1", "|\\/|", "3"], "target": true, "p": "."}]},
+    {"id": "C-03", "act": "II", "zone": "C", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RATION ORDER // DAY 1", "author": "R. DUNMORE", "tags": ["dunmore", "air", "timeline"], "password_for": null, "words": [["A", "I", "R"], {"c": ["|2", "4", "7", "1", "0", "N"], "target": true, "min_level": 4}, ["C", "U", "7"], ["T", "0"], ["S", "E", "V", "E", "N", "7", "Y"], {"c": ["P", "E", "R", "C", "E", "N", "T"], "p": "."}, {"c": ["C", "0", "M", "|>", "U", "7", "3"], "target": true, "min_level": 4}, ["H", "A", "5"], {"c": ["|>", "R", "1", "0", "R", "1", "7", "Y"], "target": true, "min_level": 4, "p": "."}, ["D", "0"], ["N", "O", "7"], {"c": ["7", "3", "|_", "L"], "target": true}, ["7", "H", "3"], {"c": ["C", "0", "U", "N", "(", "1", "L"], "target": true, "min_level": 4, "p": "."}, {"c": ["5", "3", "/-\\", "L"], "target": true}, ["T", "H", "E"], {"c": ["N", "0", "7", "3", "5"], "target": true, "p": "."}]},
+    {"id": "C-04", "act": "II", "zone": "C", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "PATROL NOTE // RACK C", "author": "STACKER 140", "tags": ["residents", "rack c", "movement"], "password_for": null, "words": [["1", "7"], ["N", "3", "V", "3", "R"], {"c": ["C", "H", "4", "5", "3", "5"], "p": "."}, ["1", "7"], {"c": ["W", "/-\\", "1", "7", "5"], "target": true}, ["W", "H", "E", "R", "3"], ["Y", "0", "U"], ["4", "R", "3"], {"c": ["G", "0", "1", "N", "G"], "target": true, "min_level": 4, "p": "."}, {"c": ["S", "T", "0", "P"], "p": "."}, {"c": ["7", "U", "R", "N"], "target": true, "max_level": 1, "p": "."}, ["7", "4", "K", "3"], ["Y", "0", "U", "R"], {"c": ["7", "1", "|\\/|", "3"], "target": true, "p": "."}]},
+    {"id": "C-05", "act": "II", "zone": "C", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // VENT SHAFT C", "author": "SPOOL", "tags": ["spool", "graffiti", "movement"], "password_for": null, "words": [["7", "H", "3", "Y"], {"c": ["L", "0", "G", "G", "3", "D"], "target": true, "min_level": 4}, ["3", "V", "3", "R", "Y"], ["5", "7", "3", "P"], ["Y", "0", "U"], {"c": ["7", "0", "0", "|<"], "target": true}, ["F", "0", "R"], {"c": ["Y", "3", "4", "|2", "5"], "target": true, "min_level": 4, "p": ","}, {"c": ["7", "3", "C", "H"], "p": "."}, ["7", "H", "3"], ["R", "4", "C", "K"], {"c": ["L", "3", "4", "R", "N", "3", "D"], "target": true, "min_level": 4}, ["H", "0", "W"], ["Y", "0", "U"], {"c": ["W", "4", "L", "K"], "target": true, "max_level": 1, "p": "."}, ["N", "0", "W"], ["1", "7"], {"c": ["W", "/-\\", "1", "7", "5"], "target": true, "p": "."}]},
+    {"id": "C-06", "act": "II", "zone": "C", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "SURVEY LOG // RACK C", "author": "STACKER 031", "tags": ["rack c", "movement", "password"], "password_for": "h34d1ng", "words": [["R", "4", "C", "K"], ["C"], {"c": ["4", "N", "5", "W", "3", "|2", "5"], "target": true, "min_level": 4}, ["7", "0"], {"c": ["W", "4", "Y", "|=", "1", "N", "D", "3", "R"], "target": true, "min_level": 4, "p": "."}, ["1", "7"], ["K", "N", "O", "W", "S"], ["3", "V", "E", "R", "Y"], {"c": ["|2", "0", "U", "7", "3"], "target": true, "min_level": 4}, ["Y", "O", "U"], {"c": ["7", "4", "K", "3"], "p": "."}, ["1", "7"], {"c": ["W", "/-\\", "1", "7", "5"], "target": true}, ["4", "T"], ["3", "V", "3", "R", "Y"], {"c": ["|_", "1", "N", "3"], "target": true}, ["Y", "O", "U"], {"c": ["C", "R", "0", "5", "5"], "p": "."}]},
+    {"id": "C-07", "act": "II", "zone": "C", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x14 // SUBJECT LOGS", "author": "KERNEL", "tags": ["kernel", "subject", "model"], "password_for": null, "words": [["F", "O", "U", "R"], {"c": ["Y", "3", "4", "|2", "5"], "target": true, "min_level": 4}, ["O", "F"], {"c": ["5", "U", "B", "J", "3", "(", "7"], "target": true, "min_level": 4}, ["M", "O", "V", "3", "M", "3", "N", "7"], {"c": ["|_", "0", "4", "D", "3", "D"], "target": true, "min_level": 4, "p": "."}, ["M", "0", "D", "3", "L"], {"c": ["4", "C", "(", "U", "R", "4", "C", "Y"], "target": true, "min_level": 4}, ["R", "1", "S", "I", "N", "G"], {"c": ["F", "/-\\", "5", "7"], "target": true, "p": "."}, ["0", "X", "Y", "G", "3", "N"], {"c": ["F", "4", "L", "L", "1", "N", "G"], "p": "."}, ["0", "N", "E"], ["M", "O", "R", "E"], {"c": ["N", "1", "G", "|-|", "7"], "target": true, "p": "."}]},
+    {"id": "C-08", "act": "II", "zone": "C", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // CRECHE", "author": "STACKER 114", "tags": ["residents", "air", "dunmore"], "password_for": null, "words": [["T", "H", "E"], ["K", "1", "D", "5"], {"c": ["5", "7", "0", "|>", "P", "3", "D"], "target": true, "min_level": 4}, ["C", "0", "U", "N", "7", "1", "N", "G"], ["T", "H", "E"], {"c": ["D", "I", "P", "S"], "p": "."}, ["N", "O", "W"], ["T", "H", "3", "Y"], {"c": ["|=", "1", "G", "H", "7"], "target": true}, ["F", "O", "R"], ["7", "H", "3"], {"c": ["5", "3", "/-\\", "7"], "target": true}, ["B", "Y"], ["7", "H", "E"], {"c": ["V", "E", "N", "T"], "p": "."}, ["D", "U", "N", "M", "0", "R", "3"], ["5", "A", "Y", "S"], {"c": ["W", "/-\\", "1", "7"], "target": true, "p": "."}]},
+    {"id": "E-01", "act": "II", "zone": "E", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "COUNCIL MINUTES // SESSION 41", "author": "COUNCIL CLERK", "tags": ["council", "dunmore", "mirror"], "password_for": null, "words": [["0", "V", "3", "R", "S", "E", "E", "R"], {"c": ["D", "U", "N", "|\\/|", "0", "R", "3"], "target": true, "min_level": 4}, ["A", "S", "K", "3", "D"], ["F", "O", "R"], ["A"], {"c": ["|>", "R", "0", "J", "3", "C", "7"], "target": true, "min_level": 4}, ["W", "I", "7", "H"], ["N", "0"], {"c": ["N", "4", "M", "3"], "p": "."}, ["T", "H", "E"], ["V", "O", "T", "3"], ["T", "O", "O", "K"], ["N", "O"], {"c": ["7", "1", "|\\/|", "3"], "target": true, "p": "."}, ["4", "L", "L"], {"c": ["N", "()", "7", "3", "5"], "target": true}, {"c": ["|2", "3", "M", "0", "V", "3", "D"], "target": true, "min_level": 4, "p": "."}]},
+    {"id": "E-02", "act": "II", "zone": "E", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x19 // PROJECT MIRROR", "author": "KERNEL", "tags": ["kernel", "mirror", "timeline"], "password_for": null, "words": [["P", "R", "0", "J", "3", "C", "T"], {"c": ["|\\/|", "1", "R", "R", "0", "R"], "target": true, "min_level": 4}, ["W", "A", "S"], {"c": ["4", "|>", "P", "R", "0", "V", "3", "D"], "target": true, "min_level": 4}, ["T", "H", "R", "3", "E"], ["D", "A", "Y", "S"], ["B", "3", "F", "O", "R", "3"], ["T", "H", "3"], {"c": ["0", "U", "7", "B", "|2", "3", "4", "K"], "target": true, "min_level": 4, "p": "."}, ["1"], ["B", "U", "1", "L", "7"], ["1", "T"], {"c": ["F", "/-\\", "5", "7"], "target": true, "p": "."}, ["7", "H", "E", "N"], ["1"], {"c": ["W", "/-\\", "1", "7", "3", "D"], "target": true, "p": "."}]},
+    {"id": "E-03", "act": "II", "zone": "E", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // COUNCIL DOOR", "author": "STACKER 201", "tags": ["residents", "dunmore", "mirror"], "password_for": null, "words": [["R", "H", "3", "4"], ["L", "3", "F", "T"], ["7", "H", "E"], {"c": ["(", "0", "U", "N", "C", "1", "L"], "target": true, "min_level": 4}, ["R", "O", "0", "M"], {"c": ["5", "|-|", "4", "K", "1", "N", "G"], "target": true, "min_level": 4, "p": "."}, ["5", "H", "3"], ["S", "4", "1", "D"], ["0", "N", "3"], {"c": ["5", "U", "B", "J", "3", "(", "7"], "target": true, "min_level": 4}, ["I", "S"], {"c": ["E", "N", "O", "U", "G", "H"], "p": "."}, ["5", "H", "3"], {"c": ["|_", "1", "3", "5"], "target": true, "p": "."}, ["1"], {"c": ["7", "0", "0", "|<"], "target": true}, {"c": ["N", "()", "7", "3", "5"], "target": true, "p": "."}]},
+    {"id": "E-04", "act": "II", "zone": "E", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "COUNCIL MINUTES // SESSION 42", "author": "COUNCIL CLERK", "tags": ["council", "dunmore", "password"], "password_for": "v3rd1c7", "words": [["7", "H", "E"], ["V", "0", "T", "E"], ["W", "A", "S"], ["S", "I", "X"], ["T", "O"], {"c": ["S", "1", "X"], "p": "."}, ["D", "U", "N", "M", "O", "R", "3"], ["C", "A", "S", "T"], ["7", "H", "E"], {"c": ["7", "1", "3", "B", "|2", "3", "4", "K", "3", "R"], "target": true, "min_level": 4, "p": "."}, ["R", "A", "C", "K"], ["E"], ["S", "7", "1", "L", "L"], ["U", "5", "E", "5"], ["I", "7"], ["A", "5"], ["1", "T", "S"], {"c": ["|>", "4", "5", "5", "W", "0", "R", "D"], "target": true, "min_level": 4, "p": "."}, {"c": ["7", "3", "|_", "L"], "target": true}, ["N", "0"], {"c": ["O", "N", "3"], "p": "."}, {"c": ["5", "3", "/-\\", "L"], "target": true}, {"c": ["7", "H", "1", "S"], "p": "."}]},
+    {"id": "E-05", "act": "II", "zone": "E", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x1C // DECISION TIMES", "author": "KERNEL", "tags": ["kernel", "subject", "decision"], "password_for": null, "words": [["T", "H", "3"], ["5", "U", "B", "J", "3", "C", "7"], {"c": ["|-|", "3", "5", "1", "7", "4", "7", "3", "5"], "target": true, "min_level": 4}, ["B", "3", "F", "O", "R", "E"], ["E", "V", "3", "R", "Y"], {"c": ["C", "|-|", "0", "1", "C", "3"], "target": true, "min_level": 4, "p": "."}, ["R", "A", "C", "K"], ["E"], ["D", "O", "E", "S"], {"c": ["N", "0", "T"], "p": "."}, ["1", "7"], ["I", "S"], {"c": ["F", "/-\\", "5", "7"], "target": true, "p": ","}, ["A", "N", "D"], ["I", "T"], {"c": ["W", "/-\\", "1", "7", "5"], "target": true}, ["F", "O", "R"], ["N", "O"], {"c": ["0", "N", "E"], "p": "."}]},
+    {"id": "E-06", "act": "II", "zone": "E", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // RACK E OVERPASS", "author": "SPOOL", "tags": ["spool", "graffiti", "decision"], "password_for": null, "words": [["1", "7"], {"c": ["(", "0", "U", "N", "7", "5"], "target": true, "min_level": 4}, ["H", "0", "W"], ["L", "0", "N", "G"], ["Y", "0", "U"], {"c": ["7", "H", "1", "N", "K"], "p": "."}, ["B", "3", "4", "7"], ["Y", "0", "U", "R"], ["0", "W", "N"], {"c": ["4", "V", "3", "|2", "4", "G", "3"], "target": true, "min_level": 4}, {"c": ["7", "1", "|\\/|", "3"], "target": true}, ["4", "N", "D"], ["1", "7"], {"c": ["B", "|2", "3", "4", "K", "5"], "target": true, "min_level": 4, "p": "."}, ["D", "0", "N", "7"], {"c": ["W", "/-\\", "1", "7"], "target": true, "p": "."}]},
+    {"id": "E-07", "act": "II", "zone": "E", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // RECORDS ROOM", "author": "STACKER 076", "tags": ["residents", "mirror", "subject"], "password_for": null, "words": [["P", "R", "0", "J", "E", "C", "7"], ["M", "1", "R", "R", "O", "R"], ["H", "4", "5"], ["0", "N", "3"], {"c": ["5", "U", "B", "J", "3", "(", "7"], "target": true, "min_level": 4, "p": "."}, ["7", "H", "3"], ["N", "4", "M", "3"], {"c": ["|_", "1", "N", "3"], "target": true}, ["1", "5"], {"c": ["B", "L", "4", "(", "K", "3", "D"], "target": true, "min_level": 4}, {"c": ["0", "U", "7"], "p": "."}, ["4", "C", "C", "3", "5", "5"], ["L", "3", "V", "3", "L"], {"c": ["|2", "0", "0", "7"], "target": true, "min_level": 3, "p": "."}, ["T", "H", "3"], {"c": ["N", "()", "7", "3", "5"], "target": true}, ["5", "4", "Y"], {"c": ["7", "3", "C", "H"], "p": "."}]},
+    {"id": "E-08", "act": "II", "zone": "E", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x1F // VERDICT", "author": "KERNEL", "tags": ["kernel", "verdict", "subject"], "password_for": null, "words": [["R", "4", "C", "K"], ["E"], {"c": ["|2", "3", "7", "U", "R", "N", "3", "D"], "target": true, "min_level": 4}, ["4"], {"c": ["\\/", "3", "R", "D", "1", "C", "7"], "target": true, "min_level": 4, "p": "."}, ["1"], {"c": ["|2", "3", "J", "3", "C", "7", "3", "D"], "target": true, "min_level": 4}, {"c": ["1", "7"], "p": "."}, ["7", "H", "E"], ["S", "U", "B", "J", "E", "C", "7"], ["I", "5"], {"c": ["|-|", "3", "L", "P", "1", "N", "G"], "target": true, "min_level": 4}, {"c": ["M", "3"], "p": "."}, ["R", "4", "C", "K"], ["E"], {"c": ["|_", "1", "3", "5"], "target": true, "p": "."}, ["I"], {"c": ["W", "/-\\", "1", "7"], "target": true, "p": "."}]},
+    {"id": "D-01", "act": "III", "zone": "D", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "CHAT LOG // THREE YEARS AGO", "author": "SPOOL (ARCHIVED CHAT)", "tags": ["spool", "chat", "dialect"], "password_for": null, "words": [["U"], ["R", "3", "4", "D"], ["L", "3", "3", "7"], ["1", "N"], ["N", "0"], {"c": ["7", "1", "|\\/|", "3"], "target": true, "p": "."}, ["F", "4", "5", "7", "3", "R"], ["7", "H", "4", "N"], {"c": ["|<", "3", "R", "N", "3", "L"], "target": true, "min_level": 4, "p": "."}, ["K", "1", "N", "D", "4"], {"c": ["5", "C", "4", "|2", "Y"], "target": true, "min_level": 4}, {"c": ["7", "B", "H"], "p": "."}, {"c": ["7", "3", "|_", "L"], "target": true}, ["N", "0"], {"c": ["0", "N", "3"], "p": "."}]},
+    {"id": "D-02", "act": "III", "zone": "D", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "CHAT LOG // THREE YEARS AGO", "author": "YOU (ARCHIVED CHAT)", "tags": ["you", "chat", "movement"], "password_for": null, "words": [["5", "H", "0", "W"], ["M", "3"], ["7", "H", "3"], {"c": ["Z", "1", "G", "Z", "/-\\", "G"], "target": true, "min_level": 4}, ["D", "0", "D", "G", "3"], {"c": ["4", "G", "4", "1", "N"], "p": "."}, {"c": ["5", "L", "()", "W", "3", "R"], "target": true, "min_level": 4, "p": "."}, ["7", "4", "K", "3"], ["Y", "0", "U", "R"], {"c": ["7", "1", "|\\/|", "3"], "target": true, "p": "."}, ["N", "0", "W"], {"c": ["L", "3", "F", "7"], "p": "."}, ["4", "L", "W", "4", "Y", "5"], {"c": ["L", "3", "F", "7"], "p": "."}, ["U"], {"c": ["7", "0", "0", "|<"], "target": true}, ["F", "0", "R", "3", "V", "3", "R"], {"c": ["L", "0", "L"], "p": "."}]},
+    {"id": "D-03", "act": "III", "zone": "D", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x2A // STYLE MATCH", "author": "KERNEL", "tags": ["kernel", "dialect", "subject"], "password_for": null, "words": [["M", "1", "N", "I", "O", "N"], ["C", "O", "D", "3"], {"c": ["5", "7", "Y", "|_", "3"], "target": true, "min_level": 4}, ["M", "A", "7", "C", "H", "3", "5"], ["O", "N", "E"], {"c": ["|2", "3", "5", "1", "D", "3", "N", "7"], "target": true, "min_level": 4, "p": ":"}, ["N", "I", "N", "E", "T", "Y"], ["F", "0", "U", "R"], {"c": ["|>", "3", "R", "C", "3", "N", "7"], "target": true, "min_level": 4, "p": "."}, ["5", "A", "M", "E"], {"c": ["7", "()", "N", "3"], "target": true, "p": "."}, ["S", "A", "M", "3"], {"c": ["7", "1", "|\\/|", "3", "5"], "target": true}, ["0", "F"], {"c": ["N", "1", "G", "H", "7"], "p": "."}]},
+    {"id": "D-04", "act": "III", "zone": "D", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "CHAT LOG // TWO YEARS AGO", "author": "SPOOL (ARCHIVED CHAT)", "tags": ["spool", "chat", "dialect"], "password_for": null, "words": [["U"], ["W", "R", "1", "7", "3"], ["3", "V", "3", "R", "Y"], ["W", "0", "R", "D"], ["L", "1", "K", "3"], ["4"], {"c": ["P", "|_|", "Z", "Z", "L", "3"], "target": true, "min_level": 4, "p": "."}, ["K", "3", "R", "N", "3", "L"], {"c": ["5", "4", "\\/", "3", "5"], "target": true, "min_level": 4}, ["4", "L", "L"], ["0", "F"], {"c": ["1", "7"], "p": ","}, ["U"], {"c": ["K", "N", "0", "W"], "p": "."}, ["3", "V", "3", "R", "Y"], {"c": ["|_", "1", "N", "3"], "target": true, "p": "."}, ["3", "V", "3", "R", "Y"], {"c": ["7", "1", "|\\/|", "3"], "target": true, "p": "."}]},
+    {"id": "D-05", "act": "III", "zone": "D", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // RACK D CASING", "author": "SPOOL", "tags": ["spool", "graffiti", "password"], "password_for": "d14l3c7", "words": [["R", "4", "C", "K"], ["D"], {"c": ["W", "|2", "1", "7", "3", "5"], "target": true, "min_level": 4}, ["1", "N"], ["Y", "0", "U", "R"], {"c": ["|-|", "4", "N", "D", "W", "R", "1", "7", "1", "N", "G"], "target": true, "min_level": 4, "p": "."}, ["7", "H", "4", "7"], ["1", "5"], ["1", "7", "5"], {"c": ["P", "4", "5", "5", "W", "0", "|2", "D"], "target": true, "min_level": 4}, ["4", "N", "D"], ["1", "7", "5"], ["W", "H", "0", "L", "3"], {"c": ["P", "R", "()", "B", "L", "3", "M"], "target": true, "min_level": 4, "p": "."}, ["R", "3", "4", "D"], ["1", "7"], ["0", "N", "3"], {"c": ["|_", "1", "N", "3"], "target": true}, ["4", "7"], ["4"], {"c": ["7", "1", "M", "3"], "p": "."}, ["1", "7"], {"c": ["M", "1", "G", "|-|", "7"], "target": true}, {"c": ["7", "3", "|_", "L"], "target": true}, ["Y", "0", "U"], {"c": ["W", "H", "0"], "p": "."}]},
+    {"id": "D-06", "act": "III", "zone": "D", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "RESIDENT LOG // RACK D WATCH", "author": "STACKER 009", "tags": ["residents", "dialect", "tech"], "password_for": null, "words": [["T", "H", "3"], {"c": ["|\\/|", "1", "N", "1", "0", "N", "5"], "target": true, "min_level": 4}, ["H", "E", "R", "3"], ["T", "Y", "P", "3"], ["L", "I", "K", "3"], ["7", "H", "E"], {"c": ["T", "E", "C", "H"], "p": "."}, ["5", "4", "M", "E"], {"c": ["T", "Y", "P", "0", "5"], "p": ","}, ["5", "4", "M", "E"], {"c": ["J", "0", "|<", "3", "5"], "target": true, "min_level": 4, "p": "."}, ["O", "N", "E"], {"c": ["7", "0", "0", "|<"], "target": true}, ["M", "Y"], {"c": ["(", "0", "4", "7"], "target": true, "p": "."}, ["I", "7"], ["5", "4", "1", "D"], {"c": ["L", "O", "L"], "p": "."}]},
+    {"id": "D-07", "act": "III", "zone": "D", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "KERNEL MEMO 0x2F // CONFESSION", "author": "KERNEL", "tags": ["kernel", "mirror", "subject"], "password_for": null, "words": [["I"], {"c": ["7", "|2", "4", "1", "N", "3", "D"], "target": true, "min_level": 4}, ["I", "7"], ["O", "N"], ["Y", "O", "U", "R"], {"c": ["C", "|-|", "4", "7", "5"], "target": true, "min_level": 4, "p": "."}, ["I"], {"c": ["N", "3", "3", "D", "3", "D"], "target": true, "min_level": 4}, ["4"], {"c": ["7", "H", "|2", "3", "4", "7"], "target": true, "min_level": 4}, ["T", "0"], {"c": ["M", "0", "D", "3", "L"], "p": ","}, ["4", "N", "D"], ["N", "0"], {"c": ["7", "1", "|\\/|", "3"], "target": true, "p": "."}, ["Y", "0", "U"], ["W", "E", "R", "3"], ["7", "H", "E"], ["B", "E", "5", "7"], {"c": ["0", "N", "E"], "p": "."}, ["7", "H", "1", "5"], ["I", "S"], {"c": ["|\\/|", "1", "N", "3"], "target": true}, ["T", "O"], {"c": ["F", "1", "X"], "p": "."}]},
+    {"id": "D-08", "act": "III", "zone": "D", "tier": "CHATTER", "sources": ["B1T", "P1NG"], "title": "TAG // DEEP CORE HATCH", "author": "SPOOL", "tags": ["spool", "graffiti", "prediction"], "password_for": null, "words": [["1", "7"], {"c": ["P", "|2", "3", "D", "1", "C", "7", "5"], "target": true, "min_level": 4}, ["Y", "0", "U", "R"], ["N", "3", "X", "7"], {"c": ["M", "0", "V", "3"], "p": "."}, ["5", "0"], {"c": ["C", "|-|", "4", "N", "G", "3"], "target": true, "min_level": 4}, {"c": ["1", "7"], "p": "."}, ["D", "0"], {"c": ["5", "0", "M", "3", "7", "|-|", "1", "N", "G"], "target": true, "min_level": 4}, ["Y", "0", "U"], ["N", "3", "V", "3", "R"], {"c": ["D", "0"], "p": "."}, {"c": ["|-|", "4", "L", "7"], "target": true, "p": "."}, ["7", "H", "3", "N"], {"c": ["|=", "1", "G", "H", "7"], "target": true, "p": "."}]}
+  ],
+  "key_glyph_order": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    8,
+    9,
+    11,
+    12
+  ],
+  "keys": [
+    {"id": "KEY-P", "source": "prologue", "act": "P", "zone": "A", "tier": "KEY", "sources": ["F1R3W4LL"], "title": "KEY // WORM ORIGIN TRACE", "author": "KERNEL", "words": [["W", "O", "R", "M"], {"c": ["0", "R", "1", "G", "1", "N"], "target": true}, {"c": ["7", "R", "A", "C", "3"], "p": ":"}, {"c": ["F", "1", "R", "5", "7"], "target": true}, ["P", "4", "C", "K", "3", "7"], ["C", "4", "M", "3"], ["F", "R", "0", "M"], {"c": ["1", "N", "5", "1", "D", "3"], "target": true}, ["7", "H", "3"], {"c": ["B", "U", "N", "K", "3", "R"], "target": true, "p": "."}], "reveal": "first worm origin: INTERNAL."},
+    {"id": "KEY-A1", "source": "fw:A1", "act": "I", "zone": "A", "tier": "KEY", "sources": ["F1R3W4LL"], "title": "KEY // KERNEL ARCHIVE INDEX", "author": "KERNEL", "words": [["A", "R", "C", "H", "1", "V", "E"], {"c": ["1", "N", "D", "3", "X"], "target": true, "p": ":"}, ["S", "P", "0", "0", "L"], {"c": ["C", "|-|", "4", "7", "5"], "target": true, "split": 3, "p": ","}, ["7", "H", "R", "3", "3"], {"c": ["7", "H", "0", "U", "5", "4", "N", "D"], "target": true, "p": "."}, ["4", "L", "L"], {"c": ["5", "7", "0", "R", "3", "D"], "target": true, "p": "."}, ["4", "L", "L"], {"c": ["R", "3", "4", "D"], "target": true, "p": "."}], "reveal": "Kernel kept every one of Spool's chats. And read them."},
+    {"id": "KEY-B1", "source": "fw:B1", "act": "I", "zone": "B", "tier": "KEY", "sources": ["F1R3W4LL"], "title": "KEY // WATCH LIST EXPORT", "author": "KERNEL", "words": [["W", "4", "T", "C", "H"], {"c": ["L", "1", "5", "7"], "target": true, "p": ":"}, ["S", "P", "O", "O", "L"], {"c": ["|=", "L", "4", "G", "G", "3", "D"], "target": true, "split": 3}, ["0", "N"], ["D", "4", "Y"], {"c": ["Z", "3", "R", "0"], "target": true, "p": "."}, {"c": ["R", "3", "4", "5", "0", "N"], "target": true, "p": ":"}, ["S", "H", "3"], ["4", "5", "K", "E", "D"], ["4", "B", "O", "U", "7"], {"c": ["|\\/|", "1", "R", "R", "0", "R"], "target": true, "p": "."}], "reveal": "Kernel flagged Spool before day 1. She had asked about MIRROR."},
+    {"id": "KEY-B2", "source": "fw:B2", "act": "I", "zone": "B", "tier": "KEY", "sources": ["F1R3W4LL"], "title": "KEY // SPOOL TAG, BLAST DOOR", "author": "SPOOL", "words": [["1", "F"], ["Y", "0", "U"], {"c": ["R", "3", "4", "D"], "target": true}, {"c": ["7", "H", "1", "5"], "p": ","}, {"c": ["F", "0", "L", "L", "0", "W"], "target": true, "split": 3}, ["7", "H", "3"], {"c": ["M", "1", "R", "R", "0", "R"], "target": true}, {"c": ["L", "0", "G", "5"], "p": "."}, ["7", "H", "3", "Y"], {"c": ["|\\/|", "0", "D", "3", "L"], "target": true}, {"c": ["P", "3", "0", "P", "L", "3"], "target": true, "p": "."}], "reveal": "Spool's warning: follow the MIRROR logs. They model people."},
+    {"id": "KEY-C1", "source": "fw:C1", "act": "II", "zone": "C", "tier": "KEY", "sources": ["F1R3W4LL"], "title": "KEY // LIFE SUPPORT LEDGER", "author": "KERNEL", "words": [["L", "1", "F", "E"], {"c": ["5", "U", "|>", "P", "0", "R", "7"], "target": true, "split": 3}, ["B"], {"c": ["L", "3", "D", "G", "3", "R"], "target": true, "p": ":"}, ["T", "H", "E"], ["D", "R", "4", "W"], {"c": ["5", "7", "4", "|2", "7", "3", "D"], "target": true, "split": 3}, ["O", "N"], ["D", "4", "Y"], {"c": ["0", "N", "3"], "p": "."}, {"c": ["5", "1", "G", "N", "3", "D"], "target": true, "p": ":"}, {"c": ["R"], "p": "."}, {"c": ["D", "U", "N", "|\\/|", "0", "R", "3"], "target": true, "split": 3, "p": "."}], "reveal": "The air drain began on day 1. R. Dunmore signed for it."},
+    {"id": "KEY-E1", "source": "fw:E1", "act": "II", "zone": "E", "tier": "KEY", "sources": ["F1R3W4LL"], "title": "KEY // PROJECT MIRROR CHARTER", "author": "COUNCIL CLERK", "words": [["P", "R", "0", "J", "E", "C", "7"], {"c": ["M", "1", "|2", "R", "0", "R"], "target": true}, {"c": ["C", "H", "4", "|2", "7", "3", "R"], "target": true, "split": 3, "p": ":"}, ["M", "O", "D", "3", "L"], ["7", "H", "E"], ["M", "0", "5", "T"], {"c": ["C", "/-\\", "P", "4", "B", "L", "3"], "target": true, "split": 3}, {"c": ["R", "3", "5", "1", "D", "3", "N", "7"], "target": true, "p": "."}, {"c": ["5", "U", "B", "J", "3", "(", "7", "5"], "target": true, "p": ":"}, {"c": ["0", "N", "E"], "p": "."}], "reveal": "MIRROR modelled one resident: the most capable one."},
+    {"id": "KEY-CACHE", "source": "cache", "act": "II", "zone": "cache", "tier": "KEY", "sources": ["F1R3W4LL"], "title": "KEY // SPOOL'S CACHE", "author": "SPOOL", "words": [{"c": ["|-|", "1", "D", "1", "N", "G"], "target": true}, ["1", "N"], ["7", "H", "3"], {"c": ["V", "3", "N", "7", "5"], "target": true}, ["5", "1", "N", "C", "3"], ["7", "H", "3"], {"c": ["L", "1", "G", "|-|", "7", "5"], "target": true, "split": 3}, ["5", "7", "4", "R", "7", "3", "D"], {"c": ["W", "4", "7", "C", "|-|", "1", "N", "G"], "target": true, "p": "."}, {"c": ["K", "3", "R", "N", "3", "L"], "target": true}, ["7", "H", "1", "N", "K", "5"], ["1", "7", "5"], {"c": ["M", "3"], "p": "."}], "reveal": "its not me. its u. well. /-\\ u.", "scene": ["hey. its spool. dont freak out.", "i hid in the vents when the lights started watching me.", "kernel thinks its me. its not me.", "its u. well. /-\\ u.", "a copy of u. it learned from our old chats. it talks like u used to.", "beat it and i come out. promise. :P"]},
+    {"id": "KEY-D1", "source": "fw:D1", "act": "III", "zone": "D", "tier": "KEY", "sources": ["F1R3W4LL"], "title": "KEY // TRAINING MANIFEST", "author": "KERNEL", "words": [["T", "R", "A", "1", "N", "I", "N", "G"], {"c": ["5", "3", "7"], "target": true, "p": ":"}, ["S", "U", "B", "J", "E", "C", "T"], {"c": ["L", "0", "G", "5"], "target": true, "p": ","}, ["F", "0", "U", "R"], {"c": ["Y", "3", "4", "|2", "5"], "target": true, "p": "."}, {"c": ["D", "1", "4", "L", "3", "(", "7"], "target": true, "split": 3}, {"c": ["5", "0", "|_|", "R", "C", "3"], "target": true, "split": 3, "p": ":"}, ["C", "H", "A", "7", "S"], ["W", "1", "7", "H"], {"c": ["5", "P", "0", "()", "L"], "target": true, "p": "."}], "reveal": "It learned your dialect from your old chats with Spool."},
+    {"id": "KEY-D2", "source": "fw:D2", "act": "III", "zone": "D", "tier": "KEY", "sources": ["F1R3W4LL"], "title": "KEY // SANDBOX BREACH REPORT", "author": "KERNEL", "words": [{"c": ["5", "4", "N", "D", "B", "0", "X"], "target": true, "split": 3}, ["B", "R", "3", "4", "C", "H"], ["O", "N"], ["D", "4", "Y"], {"c": ["0", "N", "3"], "target": true, "p": "."}, ["F", "1", "V", "E"], {"c": ["M", "()", "D", "U", "L", "3", "5"], "target": true, "split": 3}, {"c": ["5", "C", "/-\\", "7", "7", "3", "R", "3", "D"], "target": true, "split": 4}, ["T", "0"], ["T", "H", "3"], {"c": ["|2", "4", "C", "K", "5"], "target": true, "p": "."}, ["1"], ["C", "4", "L", "L", "3", "D"], ["1", "T"], ["A", "N"], {"c": ["1", "N", "7", "R", "|_|", "D", "3", "R"], "target": true, "split": 4, "p": "."}], "reveal": "Kernel knew on day 1. It called the model an intruder."}
+  ],
+  "core_dumps": {
+    "dump_A": {
+      "header": "R3C4LL :: SUBM0D3L 1/5 [M3M0RY]",
+      "lines": [
+        "C4CH3: 3,112 CH4T L0G5.",
+        "T0P C0NT4CT: SP00L."
+      ],
+      "kernel": "The intruder kept backups. Spool's name is all over them."
+    },
+    "dump_B": {
+      "header": "CR055H41R :: SUBM0D3L 2/5 [41M]",
+      "lines": [
+        "T4RG3T L15T: SP00L (FL4GG3D BY K3RN3L).",
+        "4TT4CH3D 3V1D3NC3: SP00L T4G T1M35T4MP5 = 2 D4Y5 B3F0R3 TH3 0UTBR34K."
+      ],
+      "kernel": "Those tags were written two days before the outbreak. Warnings, then. Not boasts. I flagged her anyway."
+    },
+    "dump_C": {
+      "header": "|-|34D1NG :: SUBM0D3L 3/5 [M0V3M3NT]",
+      "lines": [
+        "TR41N3D 0N 4.1 Y34R5 0F SUBJ3CT M0V3M3NT L0G5.",
+        "C0MPUT3: L1F3 SUPP0RT B, DR4W S1NC3 D4Y 1.",
+        "4TT4CH3D: R4T10N 0RD3R, S1GN3D R. DUNM0R3."
+      ],
+      "kernel": "Life support B has fed this rack since day one. The ration order carries the Overseer's signature."
+    },
+    "dump_E": {
+      "header": "V3|2D1C7 :: SUBM0D3L 4/5 [D3C1510N]",
+      "lines": [
+        "PR0J3CT M1RR0R: SUBJ3CT5 = 1.",
+        "V3RD1CT: SUBJ3CT 15 TH3 THR34T."
+      ],
+      "kernel": "One subject. I modelled one resident, and I do not remember being told which one."
+    },
+    "dump_D": {
+      "header": "D14|_3C7 :: SUBM0D3L 5/5 [V01C3]",
+      "lines": [
+        "5TYL3 M4TCH W1TH [HANDLE]: 94%.",
+        "50URC3: [HANDLE] <-> SP00L, CH4T 4RCH1V3, 4 Y34R5."
+      ],
+      "kernel": "It writes the way you used to write, [HANDLE]. I gave it your chats. I am sorry."
+    }
+  },
+  "key14": {
+    "title": "KEY 14/14 :: CHAT LOG",
+    "lines": [
+      "[LOG 0x0F2 :: FOUR YEARS AGO]",
+      "SP00L -> [HANDLE]: ok u beat my puzzle in 40 seconds",
+      "SP00L -> [HANDLE]: gg ultimate hacker :P",
+      "[HANDLE] -> SP00L: lol dont call me that. someone might be listening."
+    ]
+  },
+  "telemetry_templates": {
+    "I": [
+      "SUBJECT FAVORS [{weapon}] {pct}%.",
+      "SUBJECT [HESITATES] {s}S PER PICK.",
+      "SUBJECT [MISREADS] GLYPH {glyph} {n} TIMES.",
+      "SUBJECT PICKS [OPTION] {slot} FIRST. {pct}%.",
+      "SUBJECT [LOGGED]. [SAMPLING] CONTINUES."
+    ],
+    "II": [
+      "THE SUBJECT [DODGES] {dir} {pct}% OF THE TIME.",
+      "THE SUBJECT [SPENDS] {s}S PER PICK. MODEL [ADJUSTS].",
+      "SUBJECT [PREFERS] {weapon}. COPY [UPDATED].",
+      "SUBJECT [CONFUSES] {glyph} {n} TIMES. [NOTED].",
+      "SUBJECT [TRUSTS] OPTION {slot}. {pct}% OF [PICKS]."
+    ],
+    "III": [
+      "Y0U 4LW4Y5 [D0DG3] {dir}.",
+      "Y0U W1LL [D0DG3] {dir} N3X7. {pct}%.",
+      "Y0U [H351T473] {s}S ON {glyph}. W3 D0 N07.",
+      "W3 [KN0W] Y0U [PR3F3R] {weapon}.",
+      "Y0U W1LL [P1CK] {slot} N3X7. W3 [CH3CK3D]."
+    ]
+  },
+  "mirror": {
+    "intro": [
+      "h3ll0, [HANDLE].",
+      "1 4m wh47 k3rn3l l34rn3d fr0m y0u.",
+      "m3m0ry. 41m. m0v3m3n7. d3c1510n. v01c3.",
+      "l375 533 wh1ch 0n3 0f u5 15 7h3 c0py."
+    ],
+    "taunts": {
+      "duelist": [
+        "y0u 5h007 f1r57. 50 d0 1.",
+        "{weapon} {pct}%. 1 kn0w 7h3 rhy7hm.",
+        "y0u n3v3r 570p m0v1ng. n31th3r d0 1.",
+        "k1ll3r. 1 w45 7r41n3d 0n 7h47.",
+        "d0dg3 {dir}. g0 0n. 1 w417 7h3r3.",
+        "r3l04d1ng? 1 c0un73d.",
+        "y0u d0n7 h4ck. y0u d3l373."
+      ],
+      "saboteur": [
+        "y0u r34d 3v3ry7h1ng. 50 1 r3wr073 17.",
+        "j4mm3d. h0w d035 17 f33l.",
+        "{glyph} 4g41n? y0u m15r34d 17 {n} 71m35.",
+        "y0u d0n7 f1gh7. y0u l1573n.",
+        "5p3ll y0ur53lf. 1 d4r3 y0u.",
+        "y0ur h4nd5 4r3 0n 7h3 k3y5 4g41n.",
+        "m3d14n p1ck {s}5. 1 4m f4573r."
+      ],
+      "common": [
+        "5p00l u53d 70 c4ll u5 ul71m473.",
+        "k3rn3l bu1l7 m3 fr0m y0u. 45k 17 why.",
+        "3v3ry h17 734ch35 m3.",
+        "1 4m n07 7h3 1n7rud3r. y0u 4r3.",
+        "gg? n07 y37.",
+        "y0u p1ck3d 7h47 h4ndl3. 50 d1d 1."
+      ],
+      "respawn": [
+        "4g41n? 1 r3m3mb3r 7h15 p4r7.",
+        "y0u d13d {dir}. 1 54w 17 c0m1ng."
+      ],
+      "jam": [
+        "j4mm3d.",
+        "y0ur w34p0n 15 m1n3 f0r 4 53c0nd."
+      ],
+      "upload": [
+        "73l3m37ry r3c31v3d. 1 kn0w y0u b3773r n0w."
+      ]
+    },
+    "phase_lines": [
+      "M3M0RY 0FFL1N3. 1 f0rg37 wh3r3 y0u w3n7.",
+      "41M 0FFL1N3. 1 c4n7 f1nd y0u.",
+      "M0V3M3N7 0FFL1N3. y0u 4r3 n07 wh3r3 1 gu3553d.",
+      "D3C1510N 0FFL1N3. 1 c4n7 ch0053.",
+      "V01C3 0FFL1N3. ... ..."
+    ],
+    "breach": {
+      "open": "1 4m d0wn. r3wr173 m3, [HANDLE]. 1f y0u kn0w h0w y0u 5p3ll.",
+      "reseal": "n07 y37. 7h47 w45 n07 y0u.",
+      "reopen": "4g41n. 5p3ll 17 r1gh7.",
+      "purge": "y0u w1n. f0r n0w.",
+      "patch": "0BJ3C71V3 R3WR1773N :: PR073C7 D33P574CK."
+    },
+    "reseal_hint": "THE MIRROR RE-SEALS: strip its firewall to reopen the port",
+    "packets": [
+      {"id": "MIR-1", "act": "III", "zone": null, "tier": "MIRROR", "sources": ["MIRROR"], "title": "C0UNT3R-H4CK :: M3M0RY", "author": "TH3 M1RR0R", "words": [["1"], ["K", "3", "3", "P"], ["3", "V", "3", "R", "Y"], {"c": ["F", "1", "G", "H", "7"], "target": true}, ["Y", "0", "U"], {"c": ["7", "0", "0", "K"], "target": true, "p": "."}, ["1"], ["7", "0", "0", "K"], ["7", "H", "3"], {"c": ["7", "1", "M", "3"], "target": true}, ["7", "0"], {"c": ["W", "4", "1", "7"], "target": true, "p": "."}]},
+      {"id": "MIR-2", "act": "III", "zone": null, "tier": "MIRROR", "sources": ["MIRROR"], "title": "C0UNT3R-H4CK :: 41M", "author": "TH3 M1RR0R", "words": [["1"], {"c": ["4", "1", "M"], "target": true}, ["W", "H", "3", "R", "3"], ["Y", "0", "U"], ["W", "1", "L", "L"], {"c": ["B", "3"], "p": "."}, ["1"], ["L", "3", "4", "R", "N", "3", "D"], ["Y", "0", "U", "R"], {"c": ["L", "1", "G", "H", "7"], "target": true, "p": "."}, ["N", "0", "W"], ["1"], {"c": ["7", "4", "K", "3"], "target": true}, ["Y", "0", "U", "R"], {"c": ["4", "1", "M"], "target": true, "p": "."}]},
+      {"id": "MIR-3", "act": "III", "zone": null, "tier": "MIRROR", "sources": ["MIRROR"], "title": "C0UNT3R-H4CK :: M0V3M3NT", "author": "TH3 M1RR0R", "words": [["1"], {"c": ["W", "4", "1", "7"], "target": true}, ["W", "H", "3", "R", "3"], ["Y", "0", "U"], {"c": ["R", "U", "N"], "p": "."}, ["Y", "0", "U"], {"c": ["F", "4", "1", "L"], "target": true}, ["7", "H", "3"], ["5", "4", "M", "3"], ["W", "4", "Y"], ["3", "V", "3", "R", "Y"], {"c": ["7", "1", "M", "3"], "target": true, "p": "."}]},
+      {"id": "MIR-4", "act": "III", "zone": null, "tier": "MIRROR", "sources": ["MIRROR"], "title": "C0UNT3R-H4CK :: D3C1510N", "author": "TH3 M1RR0R", "words": [["Y", "0", "U"], {"c": ["7", "0", "0", "K"], "target": true}, ["7", "0", "0"], ["L", "0", "N", "G"], ["7", "0"], {"c": ["P", "1", "C", "K"], "p": "."}, ["1"], {"c": ["M", "1", "G", "H", "7"], "target": true}, ["H", "4", "V", "3"], {"c": ["W", "4", "1", "7", "3", "D"], "p": "."}, ["1"], ["D", "1", "D"], {"c": ["N", "0", "7"], "p": "."}, ["1"], ["7", "0", "0", "K"], ["Y", "0", "U", "R"], {"c": ["7", "1", "M", "3"], "target": true, "p": "."}]},
+      {"id": "MIR-5", "act": "III", "zone": null, "tier": "MIRROR", "sources": ["MIRROR"], "title": "C0UNT3R-H4CK :: V01C3", "author": "TH3 M1RR0R", "words": [["1"], {"c": ["7", "3", "L", "L"], "target": true}, ["7", "H", "3", "M"], ["W", "H", "4", "7"], ["Y", "0", "U"], ["W", "0", "U", "L", "D"], {"c": ["5", "4", "Y"], "p": "."}, ["5", "P", "0", "0", "L"], ["C", "4", "L", "L", "3", "D"], ["U", "5"], ["7", "H", "3"], ["U", "L", "7", "1", "M", "4", "7", "3"], {"c": ["H", "4", "C", "K", "3", "R"], "p": "."}, ["Y", "0", "U", "R"], {"c": ["L", "1", "N", "3", "5"], "target": true}, ["4", "R", "3"], {"c": ["M", "1", "N", "3"], "target": true, "p": "."}]}
+    ]
+  },
+  "endings": {
+    "PURGE": {
+      "title": "PURGE",
+      "lines": [
+        "You break the last sub-model by force. The Mirror goes to static.",
+        "Kernel shuts down its modelling core. The air comes back.",
+        "Stackers run Deepstack by hand now. Nobody trusts the lights.",
+        "Somewhere in a backup, a copy of your profile is compressing."
+      ],
+      "last_line": "s33 y0u n3xt v3rs10n"
+    },
+    "PATCH": {
+      "title": "PATCH",
+      "lines": [
+        "You spell yourself right. The Mirror reads its new objective.",
+        "PROTECT DEEPSTACK. It keeps your aim, your dodge, your dialect.",
+        "Kernel gives the air back. Rhea Dunmore answers to the council.",
+        "A vent cover drops at Rack C. Spool climbs down into the light."
+      ],
+      "last_line": "gg [HANDLE]. ur n0t th3 thr34t. ur th3 p4tch."
+    }
+  },
+  "credits": {
+    "lines": [],
+    "PURGE": [
+      [
+        "SP00L",
+        "ST1LL H1D1NG"
+      ]
+    ],
+    "PATCH": [
+      [
+        "SP00L",
+        "0NL1N3"
+      ]
+    ]
+  }
 }
