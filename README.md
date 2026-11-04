@@ -12,6 +12,10 @@ A game of violence and shooting with fun and enjoyment, embarrassment and well w
      "Move to Trash"), then **System Settings > Privacy & Security > Open Anyway**.
    - Or in Terminal: `xattr -dr com.apple.quarantine "/Applications/Pixel Apocalypse.app"`
 
+   Do this on the app itself in Applications, not on an alias or Dock icon. macOS only lets
+   you approve the app you Control-click; an alias counts as a plain double-click, so it shows
+   the same warning with no **Open** button. After the first launch, aliases work normally.
+
 Details (Apple Silicon, where saves live, building the app):
 [PixelApocalypse/docs/macos-app.md](PixelApocalypse/docs/macos-app.md).
 The zip release runs with `./play.sh` instead.

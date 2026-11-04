@@ -53,6 +53,12 @@ quarantine mark, so the first plain double-click is refused ("can't be opened be
 cannot check it for malicious software" or similar; the wording varies by macOS version).
 This is needed **once**; after that the app opens normally.
 
+Do these steps on **the app itself** (in Applications), not on an alias, a Dock icon or a
+Launchpad shortcut. macOS only grants the one-time exception to the app you Control-click;
+opening it through an alias counts as a plain double-click, so you get the same warning
+again with no **Open** button. Once the app has been allowed, aliases and the Dock work
+normally.
+
 1. Open the .dmg and drag **Pixel Apocalypse** onto **Applications**. Start it from there, not
    from the disk image or Downloads (that works too, but macOS then runs it from a hidden
    temporary read-only copy).
