@@ -1,4 +1,5 @@
 """Player settings, saved to save/settings.json (the run itself is saved to save/run.json by game.py).
+Both paths are relative to gdev.DATA_DIR (the code folder, or the macOS app's Application Support folder).
 
 Settings are a plain dict. Read them with s["key"]; the helpers below turn the
 menu values into numbers other modules use.
@@ -50,7 +51,7 @@ OPTIONS = [
 def load():
     """Settings dict: saved values over DEFAULTS. Unknown or bad values fall back to defaults."""
     s = dict(DEFAULTS)
-    saved = gdev.load_json(SETTINGS_FILE, {})
+    saved = gdev.load_json(SETTINGS_FILE, {}, saved=True)
     if isinstance(saved, dict):
         for key, _label, values, _help in OPTIONS:
             if key in saved and saved[key] in values:

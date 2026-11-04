@@ -28,7 +28,10 @@ What it does (and asserts along the way):
      block from the front / strip from behind, links + EXPOSE on hack, W0RM split / no split /
      slime, the Key shard fallback at a Clean Node
   -> review regressions (last pick at the buzzer, hasty window, getaway speed, window
-     placement, focus loss mid-hack, intel log BACK, L1 word counts, callout) -> chaos
+     placement, focus loss mid-hack, intel log BACK, L1 word counts, callout)
+  -> data dir (the macOS app): with PIXEL_APOCALYPSE_DATA_DIR set, a child process saves a
+     setting and a run there, init.py --dev --frames runs from another folder, and nothing in
+     the code folder is created or changed -> chaos
   -> perf: an empty-frame baseline, then PLAY / HACK / a Daemon fight with ~40 minions.
 Dev helpers (grant_keys, dev_kill_phase, firewall / core skips) are used only where a real
 step was already exercised once; each such shortcut is commented where it happens.
@@ -37,8 +40,10 @@ Screenshots go to $SMOKE_OUT (default: the session scratchpad folder below).
 Settings and the run save are written to temporary files, never to the real save/ folder.
 Exit code 0 = everything passed.
 """
+import json
 import os
 import random
+import subprocess
 import sys
 import tempfile
 import time
@@ -2124,6 +2129,73 @@ def test_fixer_regressions():
     say("jack rings: full range only near the player")
 
 
+# Runs in a child process with PIXEL_APOCALYPSE_DATA_DIR set (fresh gdev / game / settings modules).
+DATA_DIR_CHILD = """
+import json, os, sys
+sys.path.insert(0, %r)
+import gdev, game, settings as settings_mod
+g = game.Game(headless_ok=True)
+g.settings["show_fps"] = True
+g._setting_changed("show_fps")
+g.new_run(seed=5, handle="DATADIR")
+for _ in range(3):
+    g.step([])
+saved = g.save_game()
+print(json.dumps({"data_dir": gdev.DATA_DIR, "no_bytecode": sys.dont_write_bytecode, "saved": saved,
+                  "has_save": g.has_save(), "reload": settings_mod.load()["show_fps"],
+                  "save_file": gdev.data_path(game.SAVE_FILE),
+                  "settings_file": gdev.data_path(settings_mod.SETTINGS_FILE)}))
+"""
+
+
+def _code_snapshot():
+    snap = {}
+    for root, _dirs, files in os.walk(CODE):
+        for f in files:
+            full = os.path.join(root, f)
+            try:
+                st = os.stat(full)
+            except OSError:
+                continue
+            snap[full] = (st.st_size, st.st_mtime)
+    return snap
+
+
+def test_data_dir():
+    """PIXEL_APOCALYPSE_DATA_DIR (set by the macOS app's launcher): every runtime write lands
+    under it, reads come back from it, and the code folder is never written."""
+    check(gdev.DATA_DIR == gdev.BASE_DIR or os.environ.get(gdev.DATA_DIR_ENV), "DATA_DIR defaults to the code folder")
+    check(gdev.data_path(game.SAVE_FILE) == game.SAVE_FILE, "an absolute SAVE_FILE override is used as it is")
+    base = tempfile.mkdtemp(prefix="pa_data_")
+    data = os.path.join(base, "Application Support", "Pixel Apocalypse")    # spaces, not created yet
+    env = dict(os.environ)
+    env.update({gdev.DATA_DIR_ENV: data, "SDL_VIDEODRIVER": "dummy", "SDL_AUDIODRIVER": "dummy",
+                "PYGAME_HIDE_SUPPORT_PROMPT": "1"})
+    env.pop("PYTHONDONTWRITEBYTECODE", None)        # the game itself must keep the bundle clean
+    before = _code_snapshot()
+    out = subprocess.run([sys.executable, "-c", DATA_DIR_CHILD % CODE], cwd=base, env=env,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, timeout=180)
+    check(out.returncode == 0, "data dir child exited %d: %s" % (out.returncode, out.stderr[-800:]))
+    r = json.loads(out.stdout.strip().splitlines()[-1])
+    check(r["data_dir"] == data and r["no_bytecode"], "child sees DATA_DIR %r, no bytecode" % r["data_dir"])
+    check(r["saved"] and r["has_save"] and r["reload"] is True, "save + settings written and read back: %r" % r)
+    check(r["save_file"] == os.path.join(data, "save", "run.json") and os.path.isfile(r["save_file"]),
+          "run save under the data dir: %s" % r["save_file"])
+    check(r["settings_file"] == os.path.join(data, "save", "settings.json") and os.path.isfile(r["settings_file"]),
+          "settings under the data dir: %s" % r["settings_file"])
+    # the real entry point, started from another folder, quits cleanly after N frames
+    out = subprocess.run([sys.executable, os.path.join(CODE, "init.py"), "--dev", "--frames", "30"], cwd=base,
+                         env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True,
+                         timeout=120)
+    check(out.returncode == 0, "init.py with a data dir exited %d: %s" % (out.returncode, out.stderr[-800:]))
+    after = _code_snapshot()
+    added = sorted(set(after) - set(before))
+    changed = sorted(f for f in before if f in after and after[f] != before[f])
+    check(not added and not changed, "code folder untouched with a data dir (new %s, changed %s)"
+          % (added[:5], changed[:5]))
+    say("data dir: run + settings saved under %s, code folder untouched (%d files)" % (data, len(after)))
+
+
 def random_event(rng):
     r = rng.random()
     if r < 0.45:
@@ -2281,7 +2353,8 @@ def main():
              ("wrong pick + aborts", test_wrong_pick_and_aborts), ("payloads", test_payloads),
              ("full run: prologue -> Acts I-III -> Deep Core -> PATCH", test_full_run),
              ("second run: PURGE", test_purge_run), ("minion archetypes", test_minion_types),
-             ("review fixes", test_review_fixes), ("fixer regressions", test_fixer_regressions)]
+             ("review fixes", test_review_fixes), ("fixer regressions", test_fixer_regressions),
+             ("data dir (macOS app)", test_data_dir)]
     only = [x for x in os.environ.get("SMOKE_ONLY", "").split(",") if x]
     try:
         for name, fn in steps:

@@ -69,7 +69,7 @@ ENDING = "ENDING"           # PURGE / PATCH ending + credits
 SHOP = "SHOP"               # Clean Node shop (doc 10): after F at a node terminal saves
 SUB_SCREENS = (SETTINGS, HOWTO, INTEL, SHOP)     # these go "back" to Game.return_state
 
-SAVE_FILE = "save/run.json"
+SAVE_FILE = "save/run.json"     # relative to gdev.DATA_DIR (gdev.save_json / load_json(saved=True))
 SAVE_VERSION = 2
 
 WORLD_SLOWMO = 0.30
@@ -697,7 +697,7 @@ class Game(object):
     # ------------------------------------------------------------ save / load
 
     def has_save(self):
-        d = gdev.load_json(SAVE_FILE)
+        d = gdev.load_json(SAVE_FILE, saved=True)
         return isinstance(d, dict) and d.get("version") == SAVE_VERSION and not d.get("complete")
 
     def save_game(self, reason=""):
@@ -712,7 +712,7 @@ class Game(object):
         return True
 
     def load_save(self):
-        d = gdev.load_json(SAVE_FILE)
+        d = gdev.load_json(SAVE_FILE, saved=True)
         if not isinstance(d, dict) or d.get("version") != SAVE_VERSION:
             return False
         self.run = Run(self.settings, None, handle=d.get("handle", "TECH"), save=d, dev=self.dev)
@@ -726,7 +726,7 @@ class Game(object):
         return True
 
     def _mark_save_complete(self):
-        d = gdev.load_json(SAVE_FILE)
+        d = gdev.load_json(SAVE_FILE, saved=True)
         if isinstance(d, dict):
             d["complete"] = True
             try:
