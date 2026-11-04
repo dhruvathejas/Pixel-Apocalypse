@@ -1,0 +1,77 @@
+{
+  "id": "cr055h41r",
+  "slot": 2,
+  "rack_id": "B",
+  "leet_name": "CR055H41R",
+  "plain_name": "CROSSHAIR",
+  "submodel": "AIM",
+  "act": 1,
+  "firewall_points": 3,
+  "core_bars": [
+    0,
+    1,
+    2
+  ],
+  "core_hp": 13,
+  "spawn_table": {
+    "B1T": 0.4,
+    "P1NG": 0.35,
+    "F1R3W4LL": 0.15,
+    "PR0B3": 0.1
+  },
+  "spawn_pattern": "trickle",
+  "max_alive": 7,
+  "modifiers": [
+    {
+      "id": "copy_player_weapon"
+    }
+  ],
+  "script": null,
+  "phases": [
+    {
+      "core": 0,
+      "attacks": [
+        "radial_burst"
+      ],
+      "spawn_rate": 1.0
+    },
+    {
+      "core": 1,
+      "attacks": [
+        "port_beam",
+        "packet_rain"
+      ],
+      "spawn_rate": 1.12
+    },
+    {
+      "core": 2,
+      "attacks": [
+        "radial_burst",
+        "firewall_dome",
+        "port_overload"
+      ],
+      "spawn_rate": 1.24
+    }
+  ],
+  "exposure_window_s": 18,
+  "adaptation_pool": [
+    "FIREWALL_WEIGHT",
+    "LEAD_SHOTS",
+    "FAST_KITE",
+    "BIT_SPEED"
+  ],
+  "password_word": "SHARPSHOOTER",
+  "password_chunks": [
+    "SHARP",
+    "SHOOT",
+    "ER"
+  ],
+  "password_intel_id": "B-05",
+  "core_dump": {
+    "text_id": "dump_B",
+    "key_glyph_index": 4,
+    "exploit": "WIDE_PORT",
+    "stat": "weapon_share"
+  },
+  "fight_trigger_px": 380
+}

@@ -1,0 +1,90 @@
+{
+  "id": "h34d1ng",
+  "slot": 3,
+  "rack_id": "C",
+  "leet_name": "|-|34D1NG",
+  "plain_name": "HEADING",
+  "submodel": "MOVEMENT",
+  "act": 2,
+  "firewall_points": 4,
+  "core_bars": [
+    0,
+    1,
+    2
+  ],
+  "core_hp": 14,
+  "spawn_table": {
+    "B1T": 0.35,
+    "P1NG": 0.35,
+    "PR0B3": 0.15,
+    "F1R3W4LL": 0.15
+  },
+  "spawn_pattern": "trickle",
+  "max_alive": 8,
+  "modifiers": [
+    {
+      "id": "attack_delay_s",
+      "delay_s": 1.0
+    }
+  ],
+  "script": null,
+  "phases": [
+    {
+      "core": 0,
+      "attacks": [
+        {
+          "id": "packet_rain",
+          "aim": "lead"
+        }
+      ],
+      "spawn_rate": 1.0
+    },
+    {
+      "core": 1,
+      "attacks": [
+        {
+          "id": "port_beam",
+          "aim": "lead"
+        },
+        {
+          "id": "packet_rain",
+          "aim": "lead"
+        }
+      ],
+      "spawn_rate": 1.12
+    },
+    {
+      "core": 2,
+      "attacks": [
+        {
+          "id": "port_beam",
+          "aim": "lead"
+        },
+        "radial_burst",
+        "port_overload"
+      ],
+      "spawn_rate": 1.24
+    }
+  ],
+  "exposure_window_s": 18,
+  "adaptation_pool": [
+    "LEAD_SHOTS",
+    "BIT_SPEED",
+    "MORE_PROBES",
+    "FIREWALL_WEIGHT"
+  ],
+  "password_word": "WAYFINDER",
+  "password_chunks": [
+    "WAY",
+    "FIND",
+    "ER"
+  ],
+  "password_intel_id": "C-06",
+  "core_dump": {
+    "text_id": "dump_C",
+    "key_glyph_index": 7,
+    "exploit": "TRACE_DAMPER",
+    "stat": "dodge_bias"
+  },
+  "fight_trigger_px": 380
+}

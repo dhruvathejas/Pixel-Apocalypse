@@ -3,6 +3,12 @@
 Paths are always resolved from the code folder (BASE_DIR), never from the
 current working directory, so the game runs no matter where it is started.
 
+Files the game writes while running (save/run.json, save/settings.json) live
+under DATA_DIR instead: the code folder by default (play.sh, the zip), or
+$PIXEL_APOCALYPSE_DATA_DIR when it is set. The macOS app's launcher sets it to
+~/Library/Application Support/Pixel Apocalypse, so nothing is ever written
+inside the signed .app bundle. Assets are always read from BASE_DIR.
+
 Coordinate spaces used across the game:
   window   -- real window pixels (1920x1000 when windowed). Only gdev sees these.
   internal -- the 960x500 surface everything is drawn on. Mouse positions are
@@ -21,9 +27,22 @@ if BASE_DIR not in sys.path:
     # The vendored pygame lives next to the code files.
     sys.path.insert(0, BASE_DIR)
 
+DATA_DIR_ENV = "PIXEL_APOCALYPSE_DATA_DIR"
+if os.environ.get(DATA_DIR_ENV):
+    DATA_DIR = os.path.abspath(os.path.expanduser(os.environ[DATA_DIR_ENV]))
+    # Packaged app: the code folder is read-only (and signed), so no __pycache__ either.
+    sys.dont_write_bytecode = True
+else:
+    DATA_DIR = BASE_DIR
+
+# Running from inside Pixel Apocalypse.app (also when macOS runs it from a translocated copy).
+IN_MAC_APP = sys.platform == "darwin" and ".app/Contents/Resources/" in BASE_DIR + "/"
+
 # The vendored pygame is the official build for CPython 3.9 (macOS ships it as
 # /usr/bin/python3). Started with another Python (e.g. python3 = 3.14, or the
 # editor's Run button), relaunch the same script with the system 3.9 instead.
+# Inside the macOS app the launcher embeds that same 3.9 (sys.executable is the
+# launcher, sys.argv[0] is init.py), so this never fires there.
 PYGAME_PYTHON = "/usr/bin/python3"
 PYGAME_VERSION = (3, 9)
 if sys.version_info[:2] != PYGAME_VERSION:
@@ -68,6 +87,12 @@ def path(*parts):
     return os.path.join(BASE_DIR, *parts)
 
 
+def data_path(*parts):
+    """Absolute path of a file the game writes (saves, settings): under DATA_DIR.
+    An absolute part (the smoke test's temp files) is used as it is."""
+    return os.path.join(DATA_DIR, *parts)
+
+
 # ---------------------------------------------------------------- display
 
 def init(gfps, gname, start_fullscreen=False):
@@ -77,8 +102,56 @@ def init(gfps, gname, start_fullscreen=False):
     fps = int(gfps)
     clock = pygame.time.Clock()
     pygame.display.set_caption(str(gname))
+    # On macOS SDL's window icon also replaces the Dock icon, and with none set pygame
+    # uses its own logo. Inside the app use the bundle's artwork (same as AppIcon.icns);
+    # play.sh / the zip (a plain python3 process) get the drawn one.
+    icon = (app_icon() if IN_MAC_APP else None) or window_icon()
+    if icon is not None:
+        pygame.display.set_icon(icon)       # before set_mode, so the first window gets it
     set_fullscreen(start_fullscreen)
     return screen
+
+
+ICON_SPRITE = "player_assets/player_right_asset.png"
+ICON_SIZE = 128
+
+
+# Written by tools/make_app.py next to the game folder: Contents/Resources/AppIcon.png.
+APP_ICON = os.path.join(os.path.dirname(BASE_DIR), "AppIcon.png")
+
+
+def app_icon():
+    """The .app's icon artwork as a surface, or None if it is missing."""
+    try:
+        return pygame.image.load(APP_ICON)
+    except (pygame.error, FileNotFoundError):
+        return None
+
+
+def window_icon(size=ICON_SIZE):
+    """Window / Dock icon: the player sprite, nearest-neighbour scaled onto a dark
+    rounded square with a green rim and a magenta under-glow. None if the sprite is missing."""
+    try:
+        sprite = pygame.image.load(path(ICON_SPRITE))
+    except (pygame.error, FileNotFoundError):
+        return None
+    box = sprite.get_bounding_rect()
+    if box.w == 0 or box.h == 0:
+        return None
+    sprite = sprite.subsurface(box)
+    k = max(1, int(size * 0.62) // max(box.w, box.h))
+    big = pygame.transform.scale(sprite, (box.w * k, box.h * k))
+    icon = pygame.Surface((size, size), pygame.SRCALPHA)
+    pad = size // 16
+    rim = pygame.Rect(pad, pad, size - 2 * pad, size - 2 * pad)
+    radius = size // 6
+    pygame.draw.rect(icon, BG, rim, border_radius=radius)
+    pygame.draw.rect(icon, GREEN_MID, rim, max(1, size // 32), border_radius=radius)
+    glow = pygame.Rect(0, 0, big.get_width() + 2 * k, max(2, 2 * k))
+    glow.midtop = (size // 2, (size + big.get_height()) // 2 - k)
+    pygame.draw.ellipse(icon, MAGENTA, glow)
+    icon.blit(big, big.get_rect(center=(size // 2, size // 2)))
+    return icon
 
 
 def _windowed_size():
@@ -278,18 +351,20 @@ def panel(surface, rect, fill=BG_PANEL, border=GREEN_MID, alpha=230, width=1):
 
 # ---------------------------------------------------------------- json
 
-def load_json(rel_path, default=None):
-    """Read JSON from a path relative to the code folder. Returns default on any error."""
+def load_json(rel_path, default=None, saved=False):
+    """Read JSON from a path relative to the code folder (saved=True: relative to DATA_DIR,
+    for files the game wrote with save_json). Returns default on any error."""
     try:
-        with open(path(rel_path), "r") as f:
+        with open(data_path(rel_path) if saved else path(rel_path), "r") as f:
             return json.load(f)
     except (IOError, OSError, ValueError):
         return default
 
 
 def save_json(rel_path, data):
-    """Write JSON (pretty) to a path relative to the code folder, creating folders."""
-    full = path(rel_path)
+    """Write JSON (pretty) to a path relative to DATA_DIR, creating folders. Runtime writes
+    only: read the file back with load_json(rel_path, saved=True)."""
+    full = data_path(rel_path)
     folder = os.path.dirname(full)
     if folder and not os.path.isdir(folder):
         os.makedirs(folder)

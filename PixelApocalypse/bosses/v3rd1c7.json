@@ -1,0 +1,89 @@
+{
+  "id": "v3rd1c7",
+  "slot": 4,
+  "rack_id": "E",
+  "leet_name": "V3|2D1C7",
+  "plain_name": "VERDICT",
+  "submodel": "DECISION",
+  "act": 2,
+  "firewall_points": 4,
+  "core_bars": [
+    0,
+    1,
+    2
+  ],
+  "core_hp": 13,
+  "spawn_table": {
+    "B1T": 0.3,
+    "P1NG": 0.3,
+    "PR0B3": 0.2,
+    "F1R3W4LL": 0.2
+  },
+  "spawn_pattern": "ring",
+  "max_alive": 8,
+  "modifiers": [
+    {
+      "id": "visible_queue",
+      "show": 3,
+      "show_last_phase": 5
+    }
+  ],
+  "script": "bosses/verdict.py",
+  "verdict": {
+    "factor": [
+      1.15,
+      1.0,
+      0.85
+    ],
+    "min_s": 2.0,
+    "max_s": 8.0
+  },
+  "phases": [
+    {
+      "core": 0,
+      "attacks": [
+        "radial_burst",
+        "packet_rain"
+      ],
+      "spawn_rate": 1.0
+    },
+    {
+      "core": 1,
+      "attacks": [
+        "blackout",
+        "port_beam"
+      ],
+      "spawn_rate": 1.12
+    },
+    {
+      "core": 2,
+      "attacks": [
+        "port_overload",
+        "firewall_dome",
+        "packet_rain"
+      ],
+      "spawn_rate": 1.24
+    }
+  ],
+  "exposure_window_s": 18,
+  "adaptation_pool": [
+    "MORE_PROBES",
+    "FIREWALL_WEIGHT",
+    "TIER2_SHARE",
+    "FAST_KITE"
+  ],
+  "password_word": "TIEBREAKER",
+  "password_chunks": [
+    "TIE",
+    "BREAK",
+    "ER"
+  ],
+  "password_intel_id": "E-04",
+  "core_dump": {
+    "text_id": "dump_E",
+    "key_glyph_index": 10,
+    "exploit": "CHAIN_DAEMON",
+    "stat": "decision"
+  },
+  "fight_trigger_px": 380
+}

@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 PixelApocalypse/save/
+# macOS app build output (PixelApocalypse/tools/make_app.py)
+dist/
+build/

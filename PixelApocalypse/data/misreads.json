@@ -23,7 +23,17 @@
     "|_|":  [["L", 1.0], ["V", 0.7]],
     "(":    [["G", 1.0], ["O", 0.6]]
   },
-  "lookalikes": [["O", "Q", "D"], ["E", "F"], ["I", "L", "T"], ["U", "V"], ["M", "N"]],
+  "lookalikes": [["O", "Q", "D"], ["E", "F"], ["I", "L", "T"], ["U", "V"], ["M", "N"], ["V", "W"], ["V", "Y"]],
+  "misencodings": {
+    "_doc": "Reversed picks (doc 8.4): wrong leet spellings of a letter, added to the ones hack.py derives by running the misread table backwards (a glyph misread AS the letter, e.g. L as |_|; a multi-letter misread spelled out, R as |Z) and a look-alike letter's glyph. The first ten are the doc 5.4 list for the handle-only letters. Never a valid glyph of the letter; never a lowercase letter.",
+    "N": [["|-|", 1.0]], "W": [["\\/", 1.0], ["VV", 0.8], ["\\^/", 0.6]], "G": [["(", 1.0], ["(_", 0.8], ["9", 0.6]],
+    "Y": [["\\/", 1.0]], "B": [["3", 1.0]], "D": [["|>", 1.0]], "X": [["|<", 1.0], ["}{", 0.8], ["*", 0.5]],
+    "Z": [["5", 1.0], ["7_", 0.6]], "J": [["|", 1.0], ["_/", 0.6], ["]", 0.6]], "Q": [["0", 1.0]],
+    "A": [["/\\", 1.0], ["/-", 0.6], ["^", 0.6]], "C": [["<", 0.8], ["[", 0.6]], "E": [["[-", 0.8], ["|-", 0.5]],
+    "F": [["|-", 1.0], ["/=", 0.6]], "H": [["#", 0.8], ["]-[", 0.8]], "I": [["!", 0.8]], "K": [["|{", 0.8], ["1<", 0.6]],
+    "M": [["/\\/\\", 0.8]], "P": [["|)", 1.0], ["|*", 0.8], ["|D", 0.6]], "R": [["|?", 0.8], ["12", 0.6]],
+    "S": [["2", 1.0], ["Z", 0.6], ["\u00a7", 0.5]], "U": [["(_)", 0.8]], "V": [["\\|", 0.6]]
+  },
   "real_words": [
     "BACKS", "BAIL", "BAND", "BANK", "BARK", "BARN", "BASE", "BAT", "BATCH", "BEACH", "BEAD", "BEAR", "BED", "BENCH", "BEND", "BENT",
     "BEST", "BOLT", "BOOT", "BOUT", "BOUTS", "BOWER", "BUSH", "CANE", "COAL", "COMB", "CONE", "DALES", "DARK", "DEAR", "DIN", "DOWER",
